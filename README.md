@@ -4,6 +4,17 @@ This repository is a collection of ansible roles that are used to deploy and kee
 
 **This is still in the Work In Progress stage.** 
 
+## Current State 
+Currently, we still have more testing and fixes to deal with. Particularly related with getting SSL configured to work with US3 for mysql encrypted mysql connections. This has only been tested on CentOS 8 thus far. 
+
+### TODO 
+- mysql certificates and linking them properly and related configurations
+- gfac/global DB configurations 
+- Misc unknown ghosts 
+- test on CentOS 7 (and maybe Debian/OpenSuse/RHEL ?) 
+- variable clean up - probably 
+- To be approved as a viable method to even deploy LIMS and keep LIMS up to date :) 
+
 ## Getting Started
 
 How to get it setup and working. 
