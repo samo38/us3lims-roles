@@ -9,11 +9,23 @@ Currently, we still have more testing and fixes to deal with. Particularly relat
 
 ### TODO 
 - mysql certificates and linking them properly and related configurations
-- gfac/global DB configurations 
+- gfac/global DB configurations
+- Probably more work related to gridctrl
 - Misc unknown ghosts 
 - test on CentOS 7 (and maybe Debian/OpenSuse/RHEL ?) 
 - variable clean up - probably 
 - To be approved as a viable method to even deploy LIMS and keep LIMS up to date :) 
+
+## Summary of 'what does it do?' thus far
+
+So far the roles featured here will (or mostly will):
+- Install the required packages needed for setting up LIMS
+- Configure the us3 user including it's home, and cloning the git gridctl and sql scrip repos
+- Install/keep up to date the database including user privs/permissions and databases that should exist 
+- Install and configure apache - including automating the letsencrypt certificates 
+- Install and configure php
+- Clone and configure the three main LIMS web portions: webinfo, common and newinst
+
 
 ## Getting Started
 
@@ -96,11 +108,9 @@ Here is an example playbook using the roles:
 ansible-playbook foobar-lims.yml
 ```
 
-### NOTES
+#### Encrypting the playbooks 
 
 Since using passwords are neccessary, I would recommend either encrypting the password strings or encrypting the entire playbook. The best way to handle this is likely using [ansible vault.](https://docs.ansible.com/ansible/latest/user_guide/vault.html) I will provide the main example below: 
-
-#### Encrypting the entire playbook file
 
 To do the encryption: 
 ```
