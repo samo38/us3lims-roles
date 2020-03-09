@@ -1,0 +1,3 @@
+{% for person in admin_users %}
+INSERT INTO `people` (`username`, `fname`, `lname`, `address`, `city`, `state`, `zip`,`country`, `phone`, `email`, `activated`, `organization`, `password`, `userlevel`)  VALUES ('{{ person.user }}', '{{ person.fname }}', '{{ person.lname }}', '{{ person.address }}', '{{ person.city }}', '{{ person.state }}', '{{ person.zip }}' , '{{ person.country }}', '{{ person.phone }}', '{{ person.email }}', '{{ person.activated }}', '{{ person.organization }}', MD5('{{ person.password }}'), '5') ; 
+{% endfor %} 

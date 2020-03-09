@@ -1,0 +1,43 @@
+# 1009 was picked just to follow the uid on demeler3 
+- name: Create group for us3
+  group: 
+    name: us3
+    state: present 
+
+- name: Create the ultrascan3 user 
+  user: 
+    name: us3
+    comment: ultrascan3 system user
+    group: us3
+    shell: /bin/bash
+    state: present
+
+- name: create folders 
+  file: 
+    path: '/home/us3/{{ item }}' 
+    state: directory 
+    owner: us3
+    group: apache
+  with_items: 
+    - "lims/database"
+    - "lims/database/instances" 
+
+
+- name: git mysql scripts 
+  git: 
+   repo: https://github.com/ehb54/us3_sql.git
+   version: "master" 
+   dest: "/home/us3/lims/database/sql" 
+
+- name: git gridctl scripts 
+  git: 
+   repo: https://github.com/ehb54/us3lims_gridctl.git
+   version: "{{ branch }}"
+   dest: "/home/us3/lims/bin" 
+
+- name: Ensure correct permissions in LIMS for us3 user 
+  file: 
+    path: "/home/us3/lims" 
+    owner: "us3" 
+    group: "us3" 
+    recurse: yes 

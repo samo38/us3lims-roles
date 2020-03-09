@@ -1,0 +1,45 @@
+---
+- name: Create newus3 database 
+  mysql_db: 
+        name: newus3
+        state: present 
+        login_user: root 
+        login_password: "{{ root_db_pass }}" 
+
+- name: Create global database 
+  mysql_db: 
+        name: "{{ gbl_db_name }}" 
+        state: present 
+        login_user: root 
+        login_password: "{{ root_db_pass }}" 
+
+- name: Copy over the metadata_create file 
+  copy: 
+        src: metadata_create.sql 
+        dest: /tmp 
+  when: db_configured == "no"
+
+- name: Inject metadata file for newus3
+  mysql_db: 
+        login_user: root 
+        login_password: "{{ root_db_pass }}" 
+        name: newus3
+        state: import 
+        login_host: localhost 
+        target: /tmp/metadata_create.sql 
+  when: db_configured == "no" 
+
+- name: Copy over the people_create file
+  copy: 
+        src: people_create.sql 
+        dest: /tmp 
+  when: db_configured == "no"
+
+- name: Inject the people_create file 
+  mysql_db: 
+        login_user: root 
+        login_password: "{{ root_db_pass }}" 
+        name: newus3
+        state: import 
+        target: /tmp/people_create.sql  
+  when: db_configured == "no"

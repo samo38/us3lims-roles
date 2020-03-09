@@ -1,0 +1,98 @@
+---
+# We do this because no default passwords are supplied
+- name: assert password variables are defined
+  assert: 
+     that: 
+       - us3_db_pass is defined 
+       - gbl_db_pass is defined 
+       - admins_db_pass is defined
+       - root_db_pass is defined
+
+# insert default admins for newus3_db 
+- name: Create sql file for dumping admins to newus3 database 
+  template:
+          src: new_people_inject.sql.j2 
+          dest: /tmp/new_people_inject.sql
+  when: db_configured == "no"
+         
+- name: Inject the people sql file 
+  mysql_db: 
+        login_user: root 
+        login_password: "{{ root_db_pass }}" 
+        name: newus3
+        state: import
+        target: /tmp/new_people_inject.sql
+  when: db_configured == "no"
+ 
+
+- name: Clean up tmp file 
+  file : 
+        path: /tmp/new_people_inject.sql
+        state: absent
+  when:  db_configured == "no" 
+
+
+# Common dir. 
+- name: Clone commons repo
+  git: 
+   repo: https://github.com/ehb54/us3lims_common.git
+   dest: "{{ www_common }}" 
+   version: "{{ branch }}" 
+
+# Web info dir. 
+- name: clone webinfo repo 
+  git: 
+   repo: https://github.com/ehb54/us3lims_webinfo.git
+   dest: "{{ www_uslims }}" 
+   version: "{{ branch }}" 
+
+- name: clone local uslims3_webinfo repo for templating 
+  git: 
+   repo: https://github.com/ehb54/us3lims_webinfo.git
+   dest: "/tmp/us3lims_webinfo" 
+   version: "{{ branch }}" 
+  delegate_to: localhost
+  become_user: "{{ lookup('env', 'USER') }}"
+
+- name: Copy over config.php for web info 
+  template: 
+    src: "/tmp/us3lims_webinfo/config.php.j2"
+    dest: "{{ www_uslims }}/config.php" 
+    backup: yes
+
+# Newlims dir. 
+- name: Clone newlims repo 
+  git:
+    repo: https://github.com/ehb54/us3lims_newinst 
+    version: "{{ branch }}" 
+    dest: "{{ www_newlims }}"
+
+- name: clone local newlims repo for templating 
+  git: 
+    repo: https://github.com/ehb54/us3lims_newinst
+    version: "{{ branch }}" 
+    dest: "/tmp/us3lims_newinst" 
+  delegate_to: localhost
+  become_user: "{{ lookup('env', 'USER') }}"
+
+- name: Copy over config.php for newlims 
+  template: 
+    src: "/tmp/us3lims_newinst/config.php.j2"
+    dest: "{{ www_newlims }}/config.php" 
+    backup: yes
+ 
+- name: Copy over create_instance.php for newlims 
+  template: 
+    src: "/tmp/us3lims_newinst/create_instance.php.j2"
+    dest: "{{ www_newlims }}/create_instance.php"
+    backup: yes
+
+# looks like one day if we complain enough, git will support chowning within the git module
+# https://github.com/ansible/ansible/issues/51601
+#
+- name: change permissions because ansible >:( 
+  file: 
+    path: "{{ www_base }}" 
+    owner: "us3" 
+    group: "apache" 
+    recurse: yes

@@ -1,0 +1,33 @@
+---
+- name: Assert required variables are defined
+  assert: 
+        that: 
+                - us3_db_pass is defined 
+                - gbl_db_pass is defined 
+                - admins_db_pass is defined 
+                - root_db_pass is defined
+                - admin_email is defined 
+                - us3php_db_pass is defined 
+                - ipaddr_ext is defined 
+                - ipaddr_int is defined
+
+- name: Run the initial LIMS deployment 
+  include_role: 
+        name: "{{ lims_roles }}" 
+  vars: 
+        - certbot_admin_email: "{{ admin_email }}" 
+        - certbot_create_if_missing: true 
+        - certbot_create_standalone_stop_services: [httpd]
+        - cerbot_certs:
+                - domains: 
+                        - "{{ ansible_fqdn }}" 
+        - db_configured: "no"  
+  loop:
+        - config-lims-packages 
+        - config-lims-us3-user 
+        - config-lims-database 
+        - config-lims-apache 
+        - config-lims-php
+        - config-lims-lims
+  loop_control: 
+        loop_var: lims_roles

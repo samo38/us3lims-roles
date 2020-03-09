@@ -1,0 +1,9 @@
+us3_db_host: "localhost"
+us3_db_name: "newus3"
+us3_db_user: "new_us3user"
+
+gbl_db_host: "localhost"
+gbl_db_name: "gfac"
+gbl_db_user: "gfac"
+
+db_configured: "yes"

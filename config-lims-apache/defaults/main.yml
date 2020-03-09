@@ -1,0 +1,8 @@
+apache_user: us3
+apache_group: apache 
+www_base: "/srv/www/htdocs" 
+www_uslims: "{{ www_base }}/uslims3" 
+ssl_key_path: "/etc/letsencrypt/live/{{ ansible_fqdn }}/privkey.pem"
+ssl_cert_path: "/etc/letsencrypt/live/{{ ansible_fqdn }}/fullchain.pem" 
+server_admin: "demeler@gmail.com" 
+server_name: "{{ ansible_fqdn }}" 

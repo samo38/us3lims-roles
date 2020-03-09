@@ -1,0 +1,13 @@
+- name: install torque packages
+  dnf: 
+    name: "{{ torque_packages }}"  
+    state: present
+
+- name: install misc packages
+  dnf: 
+    enablerepo: PowerTools
+    name: "{{ packages }}" 
+
+
+- name: install gpref via shell
+  shell: dnf --enablerepo=PowerTools install gperf -y
