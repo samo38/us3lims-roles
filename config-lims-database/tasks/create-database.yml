@@ -43,3 +43,18 @@
         state: import 
         target: /tmp/people_create.sql  
   when: db_configured == "no"
+
+- name: Copy over the gfac file 
+  copy: 
+        src: gfac-db.sql
+        dest: /tmp
+  when: db_configured == "no"
+
+- name: Inject gfac-db file for gfac
+  mysql_db: 
+        login_user: root 
+        login_password: "{{ root_db_pass }}" 
+        name: gfac
+        state: import 
+        target: /tmp/gfac-db.sql
+  when: db_configured == "no"
