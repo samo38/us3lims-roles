@@ -1,0 +1,58 @@
+--- 
+- name: install slurm dependencies  
+  dnf: 
+        enablerepo: PowerTools
+        name:
+                - globus-gram-job-manager-slurm
+                - munge-devel
+                - munge
+                - readline-devel
+                - pam-devel
+                - perl-ExtUtils-MakeMaker
+                - perl-Switch
+        state: present 
+
+- name: get slurm source 
+  get_url: 
+        url: "https://download.schedmd.com/slurm/slurm-{{ slurm_ver }}.tar.bz2"
+        dest: /tmp 
+
+- name: build slurm packages 
+  shell: "rpmbuild -ta /tmp/slurm-{{ slurm_ver }}.tar.bz2"
+  when: rpm_built == "no" 
+
+
+- name: install built packages 
+  shell: "yum install ./slurm*  -y" 
+  args: 
+        chdir: /root/rpmbuild/RPMS/x86_64 
+  when: rpm_built == "no" 
+
+- name: Create slurm user 
+  user: 
+        name: slurm
+        state: present 
+        system: yes
+
+- name: create slurm log dir 
+  file: 
+        path: /var/log/slurm/
+        owner: slurm
+        group: slurm
+        state: directory
+
+- name: create slurm spool dir 
+  file: 
+        path: /var/spool/slurm
+        owner: slurm
+        group: slurm 
+        state: directory
+
+- name: config slurm.conf 
+  template: 
+        src: slurm.conf.j2
+        dest: /etc/slurm/slurm.conf 
+        backup: yes
+  notify: 
+        - restart slurmd 
+        - restart slurmctld

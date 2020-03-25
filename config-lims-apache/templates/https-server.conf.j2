@@ -7,7 +7,12 @@
    CustomLog "/var/log/httpd/{{ ansible_hostname }}-access.log" combined
 
 SSLEngine on
+{% if self_signed == "yes" %}
+SSLCertificateFile {{ ssl_self_cert_path }} 
+SSLCertificateKeyFile {{ ssl_self_key_path }}
+{% else %}
 SSLCertificateFile {{ ssl_cert_path }} 
 SSLCertificateKeyFile {{ ssl_key_path }}
+{% endif %}
 </VirtualHost>
 </IfModule>

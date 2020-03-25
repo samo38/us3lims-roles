@@ -1,0 +1,3 @@
+cluster_name: localhost 
+control_machine: localhost 
+cores: 2

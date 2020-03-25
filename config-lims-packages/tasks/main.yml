@@ -1,8 +1,3 @@
-- name: install torque packages
-  dnf: 
-    name: "{{ torque_packages }}"  
-    state: present
-
 - name: install misc packages
   dnf: 
     enablerepo: PowerTools

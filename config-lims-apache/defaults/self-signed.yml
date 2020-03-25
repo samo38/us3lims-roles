@@ -1,0 +1,11 @@
+---
+- name: Generate ssl
+  openssl_certificate: 
+        path: "{{ ssl_self_cert_path }}" 
+        privatekey_path: "{{ ssl_self_key_path }}" 
+        signature_algorithms: 
+                - sha512WithRSAEncryption
+        subject: 
+                commonName: "{{ ansible_fqdn }}" 
+        issuer: "{{ ansible_fqdn }}" 
+        version: 3

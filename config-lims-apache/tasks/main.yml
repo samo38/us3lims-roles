@@ -1,19 +1,49 @@
 - name: Ensure www path exists 
   file: 
-        path: "/var/www/htdocs/" 
+        path: "{{ www_base }}" 
         owner: us3
         group: apache 
         state: directory 
 
-
 - name: Check if certs are already created/inplace for letsencrypt 
   stat: 
         path: "/etc/letsencrypt/live/{{ ansible_fqdn  }}/" 
-  register: cert_path
+  register: cert_path 
 
 - include_role: 
          name: geerlingguy.certbot
-  when: cert_path.stat.exists == false
+  when: cert_path.stat.exists == false and self_signed == 'no' 
+
+- name: Create ssl folder for self-signed cert
+  file: 
+        path: "{{ ssl_self_base_path }}" 
+        state: directory 
+
+- name: generate the self-signed private key 
+  openssl_privatekey: 
+        path: "{{ ssl_self_key_path }}" 
+  when: self_signed == 'yes' 
+
+- name: generate the self-signed csr 
+  openssl_csr: 
+        path: "{{ ssl_self_csr_path }}" 
+        privatekey_path: "{{ ssl_self_key_path }}" 
+  when: self_signed == 'yes' 
+
+- name: Generate self signed ssl
+  openssl_certificate: 
+        provider: selfsigned
+        path: "{{ ssl_self_cert_path }}" 
+        privatekey_path: "{{ ssl_self_key_path }}" 
+        csr_path: "{{ ssl_self_csr_path }}" 
+#        signature_algorithms: 
+#                - sha512WithRSAEncryption
+#        subject: 
+#                commonName: "{{ ansible_fqdn }}" 
+#        issuer: 
+#                commonName: "{{ ansible_fqdn }}" 
+#        version: 3
+  when: self_signed == 'yes'  
 
 - name: Configure base apache2 config from template
   template: 
