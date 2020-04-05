@@ -9,7 +9,6 @@ Currently, we still have more testing and fixes to deal with. Particularly relat
 
 ### TODO 
 - mysql certificates and linking them properly and related configurations
-- gfac/global DB configurations
 - Probably more work related to gridctrl
 - Misc unknown ghosts 
 - test on CentOS 7 (and maybe Debian/OpenSuse/RHEL ?) 
