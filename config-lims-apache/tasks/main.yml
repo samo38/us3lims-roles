@@ -5,19 +5,20 @@
         group: apache 
         state: directory 
 
-- name: Check if certs are already created/inplace for letsencrypt 
-  stat: 
-        path: "/etc/letsencrypt/live/{{ ansible_fqdn  }}/" 
-  register: cert_path 
+#- name: Check if certs are already created/inplace for letsencrypt 
+#  stat: 
+#        path: "/etc/letsencrypt/live/{{ ansible_fqdn  }}/" 
+#  register: cert_path 
 
-- include_role: 
-         name: geerlingguy.certbot
-  when: cert_path.stat.exists == false and self_signed == 'no' 
+#- include_role: 
+#         name: geerlingguy.certbot
+#  when: self_signed == 'no' 
 
 - name: Create ssl folder for self-signed cert
   file: 
         path: "{{ ssl_self_base_path }}" 
         state: directory 
+  when: self_signed == 'yes' 
 
 - name: generate the self-signed private key 
   openssl_privatekey: 
@@ -54,7 +55,7 @@
 - name: Configure virtual host for redirect 
   template: 
         src: http-server.conf.j2
-        dest: "/etc/httpd/conf.d/http-{{ ansible_hostname }}.conf" 
+        dest: "/etc/httpd/conf.d/http-{{ server_name }}.conf" 
         backup: yes 
   notify: 
         - restart apache
@@ -62,7 +63,7 @@
 - name: configure Virtual host for ssl 
   template: 
         src: https-server.conf.j2
-        dest: "/etc/httpd/conf.d/https-{{ ansible_hostname }}.conf"
+        dest: "/etc/httpd/conf.d/https-{{ server_name }}.conf"
         backup: yes 
   notify: 
         - restart apache

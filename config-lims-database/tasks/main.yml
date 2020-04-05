@@ -33,6 +33,14 @@
     group: mysql 
     recurse: yes
 
+- name: Make sure mysql is owner of /var/log/mariadb
+  file: 
+    path: /var/log/mariadb
+    state: directory 
+    owner: mysql
+    group: mysql 
+    recurse: yes
+
 - name: start MariaDB
   service: 
        name: mariadb
@@ -78,7 +86,7 @@
         login_user: root
         login_password: "{{ root_db_pass }}" 
   with_items: 
-        - "{{ ansible_fqdn }}" 
+        - "{{ server_name }}" 
         - 127.0.0.1
         - localhost
         - ::1
@@ -93,7 +101,7 @@
         login_user: root
         login_password: "{{ root_db_pass }}" 
   with_items: 
-        - "{{ ansible_fqdn }}" 
+        - "{{ server_name }}" 
         - 127.0.0.1
         - localhost
         - ::1
@@ -108,7 +116,7 @@
         login_user: root
         login_password: "{{ root_db_pass }}" 
   with_items: 
-        - "{{ ansible_fqdn }}" 
+        - "{{ server_name }}" 
         - 127.0.0.1
         - localhost
         - ::1
@@ -123,7 +131,7 @@
         login_user: root
         login_password: "{{ root_db_pass }}" 
   with_items: 
-        - "{{ ansible_fqdn }}" 
+        - "{{ server_name }}" 
         - 127.0.0.1
         - localhost
         - ::1
@@ -138,7 +146,7 @@
         login_user: root
         login_password: "{{ root_db_pass }}" 
   with_items: 
-        - "{{ ansible_fqdn }}" 
+        - "{{ server_name }}" 
         - 127.0.0.1
         - localhost
         - ::1

@@ -49,3 +49,4 @@ packages:
         - GraphicsMagick-perl
         - php-pear
         - php-devel
+        - liberation-sans-fonts

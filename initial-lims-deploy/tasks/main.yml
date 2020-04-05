@@ -18,7 +18,7 @@
         - certbot_admin_email: "{{ admin_email }}" 
         - certbot_create_if_missing: true 
         - certbot_create_standalone_stop_services: [httpd]
-        - cerbot_certs:
+        - certbot_certs:
                 - domains: 
                         - "{{ ansible_fqdn }}" 
         - db_configured: "no"  

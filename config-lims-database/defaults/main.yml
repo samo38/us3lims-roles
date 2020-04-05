@@ -7,3 +7,4 @@ gbl_db_name: "gfac"
 gbl_db_user: "gfac"
 
 db_configured: "yes"
+server_name: "{{ ansible_fqdn }}"
