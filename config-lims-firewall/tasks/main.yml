@@ -1,0 +1,12 @@
+---
+- firewalld: 
+      zone: public
+      service: "{{ item }}" 
+      permanent: yes
+      state: enabled
+  notify: reload firewalld 
+  loop: 
+    - https 
+    - http 
+    - ssh 
+    - mysql 
