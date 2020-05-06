@@ -10,9 +10,9 @@
 #        path: "/etc/letsencrypt/live/{{ ansible_fqdn  }}/" 
 #  register: cert_path 
 
-#- include_role: 
-#         name: geerlingguy.certbot
-#  when: self_signed == 'no' 
+- include_role: 
+         name: geerlingguy.certbot
+  when: self_signed == 'no' 
 
 - name: Create ssl folder for self-signed cert
   file: 
