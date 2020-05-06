@@ -1,0 +1,25 @@
+; {{ ansible_managed }}
+; UltraScan3 LIMS INI file
+;
+; The next 5 sections provide passwords and hashes for common mysql users
+
+[superuser]
+  password = '{{ admins_db_pass }}'
+  md5 = '{{ admins_db_pass | hash('md5') }}'
+
+[gfac]
+  user = '{{ gbl_db_user }}'
+  password = '{{ gbl_db_pass }}'
+  md5 = '{{ gbl_db_pass | hash('md5') }}'
+
+[us3php]
+  user = '{{ us3php_db_user }}'
+  password = '{{ us3php_db_pass }}'
+
+[newus3]
+  user = '{{ us3_db_user }}'
+  password = '{{ us3_db_pass }}'
+
+[limsadmin]
+  user = '{{ limsadmin_db_user }}'
+  password = '{{ limsadmin_db_pass }}'
