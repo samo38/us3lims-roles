@@ -28,5 +28,6 @@
         - config-lims-apache 
         - config-lims-php
         - config-lims-lims
+        - config-lims-firewall
   loop_control: 
         loop_var: lims_roles
