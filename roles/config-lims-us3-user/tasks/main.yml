@@ -26,7 +26,7 @@
 - name: git mysql scripts 
   git: 
    repo: https://github.com/ehb54/us3_sql.git
-   version: "master" 
+   version: "{{ branch }}"  
    dest: "/home/us3/lims/database/sql" 
 
 - name: git gridctl scripts 
