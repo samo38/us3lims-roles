@@ -37,13 +37,6 @@
         path: "{{ ssl_self_cert_path }}" 
         privatekey_path: "{{ ssl_self_key_path }}" 
         csr_path: "{{ ssl_self_csr_path }}" 
-#        signature_algorithms: 
-#                - sha512WithRSAEncryption
-#        subject: 
-#                commonName: "{{ ansible_fqdn }}" 
-#        issuer: 
-#                commonName: "{{ ansible_fqdn }}" 
-#        version: 3
   when: self_signed == 'yes'  
 
 - name: Configure base apache2 config from template
