@@ -2,6 +2,11 @@
 
 This repository is a collection of ansible roles that are used to deploy and keep a us3 lims server up to date. 
 
+[![Build Status](https://travis-ci.com/KJSain/us3lims-roles.svg?branch=master)](https://travis-ci.com/KJSain/us3lims-roles)
+
+current roles travis/molecule tested: 
+- config-lims-php
+
 **This is still in the Work In Progress stage.** 
 
 ## Current State 
