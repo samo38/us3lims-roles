@@ -1,0 +1,14 @@
+packages:
+  - php
+  - php-fpm
+  - php-mysqlnd
+  - GraphicsMagick
+  - GraphicsMagick-devel
+  - GraphicsMagick-perl
+  - ImageMagick
+  - ImageMagick-devel
+  - ImageMagick-perl
+  - php-devel
+  - php-pear
+  - liberation-sans-fonts
+  - make

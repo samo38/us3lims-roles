@@ -1,6 +1,11 @@
 ---
-- name: Check if magik already exists 
-  stat: 
+- name: install php related dependencies
+  dnf:
+      enablerepo: PowerTools
+      name: "{{ packages }}"
+
+- name: Check if magik already exists
+  stat:
         path: /usr/lib64/php/modules/imagick.so
   register: imagick_module
 
@@ -8,24 +13,24 @@
   shell: echo '' | /usr/bin/pecl install imagick
   when: imagick_module.stat.exists == false
 
-- name: Configure php.ini 
-  copy: 
+- name: Configure php.ini
+  copy:
         src: php.ini
         dest: /etc/php.ini
-        backup: yes 
+        backup: yes
   notify: restart php-fpm
 
 
-- name: Configure php-fpm.conf 
-  copy: 
+- name: Configure php-fpm.conf
+  copy:
         src: php-fpm.conf
         dest: /etc/php-fpm.conf
-        backup: yes 
+        backup: yes
   notify: restart php-fpm
 
-- name: Configure www.conf 
-  copy: 
+- name: Configure www.conf
+  copy:
         src: www.conf
         dest: /etc/php-fpm.d/www.conf
-        backup: yes 
+        backup: yes
   notify: restart php-fpm

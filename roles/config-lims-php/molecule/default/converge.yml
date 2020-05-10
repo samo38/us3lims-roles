@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Setup epel repo via geerlingguy"
+      include_role:
+         name: "geerlingguy.repo-epel"
+
+    - name: "Create us3 user"
+      user:
+        name: "us3"
+        state: present 
+
+    - name: "Include config-lims-php"
+      include_role:
+        name: "config-lims-php"
