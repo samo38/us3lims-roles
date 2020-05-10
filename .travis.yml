@@ -8,9 +8,9 @@ services:
 install:
   - pip install molecule docker
 script:
-  - env: Php role 
+  - env: config-lims-php 
     before_script: 
-      - cd ${TRAVIS_BUILD_DIR}/roles/config-php
+      - cd ${TRAVIS_BUILD_DIR}/roles/config-lims-php
     script: 
       - molecule --version
       - ansible --version
