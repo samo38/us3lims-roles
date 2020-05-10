@@ -7,11 +7,15 @@ services:
   - docker
 install:
   - pip install molecule docker
-script:
-  - env: config-lims-php 
-    before_script: 
-      - cd ./roles/config-lims-php
-    script: 
-      - molecule --version
-      - ansible --version
-      - molecule test
+
+matrix: 
+  include: 
+    - env: config-lims-php
+      before_script: 
+        - cd {TRAVIS_BUILD_DIR}/roles/config-lims-php
+      script: 
+        - molecule --version
+        - ansible --version
+        - molecule test
+on:
+  branch: master
