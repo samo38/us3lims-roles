@@ -4,16 +4,14 @@ A role to configure the databases for a US3 LIMS server using mariadb
 
 ## Requirements 
 
-None
+- geerlingguy.repo-epel
 
 ## Role Variables 
 
 #### General defaults: 
 ```yaml 
-db_configured: "yes"
 server_name: "{{ ansible_fqdn }}"
 ```
-To be safe the role will assume that the database is already configured. For deployment define ```db_configured: "no"```. 
 
 #### database and user defaults: 
 ```yaml
@@ -29,6 +27,13 @@ Variables for the default us3 users and gfac
 
 ```
 
+#### Required Variables: 
+```yaml
+us3_db_pass: 
+gbl_db_pass: 
+us3php_db_pass: 
+```
+These are required password variables for the variable database users that are used. 
 
 ## Example Playbook 
 ```yaml

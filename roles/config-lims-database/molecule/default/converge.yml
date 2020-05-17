@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    us3_db_pass: foobar-1
+    root_db_pass: foobar-super
+    gbl_db_pass: foobar-g
+    us3php_db_pass: foobar-php
+  tasks:
+    - name: "Setup epel repo via geerlingguy"
+      include_role:
+         name: "geerlingguy.repo-epel"
+
+    - name: "Include config-lims-database"
+      include_role:
+        name: "config-lims-database"

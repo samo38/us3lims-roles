@@ -1,60 +1,60 @@
 ---
-- name: Create newus3 database 
-  mysql_db: 
+- name: Create newus3 database
+  mysql_db:
         name: newus3
-        state: present 
-        login_user: root 
-        login_password: "{{ root_db_pass }}" 
+        state: present
+        login_user: root
+        login_password: "{{ root_db_pass }}"
 
-- name: Create global database 
-  mysql_db: 
-        name: "{{ gbl_db_name }}" 
-        state: present 
-        login_user: root 
-        login_password: "{{ root_db_pass }}" 
+- name: Create global database
+  mysql_db:
+        name: "{{ gbl_db_name }}"
+        state: present
+        login_user: root
+        login_password: "{{ root_db_pass }}"
 
-- name: Copy over the metadata_create file 
-  copy: 
-        src: metadata_create.sql 
-        dest: /tmp 
-  when: db_configured == "no"
+- name: Copy over the metadata_create file
+  copy:
+        src: metadata_create.sql
+        dest: /tmp
+  when: root_pwd_check.rc == 0
 
 - name: Inject metadata file for newus3
-  mysql_db: 
-        login_user: root 
-        login_password: "{{ root_db_pass }}" 
+  mysql_db:
+        login_user: root
+        login_password: "{{ root_db_pass }}"
         name: newus3
-        state: import 
-        login_host: localhost 
-        target: /tmp/metadata_create.sql 
-  when: db_configured == "no" 
+        state: import
+        login_host: localhost
+        target: /tmp/metadata_create.sql
+  when: root_pwd_check.rc == 0
 
 - name: Copy over the people_create file
-  copy: 
-        src: people_create.sql 
-        dest: /tmp 
-  when: db_configured == "no"
+  copy:
+        src: people_create.sql
+        dest: /tmp
+  when: root_pwd_check.rc == 0
 
-- name: Inject the people_create file 
-  mysql_db: 
-        login_user: root 
-        login_password: "{{ root_db_pass }}" 
+- name: Inject the people_create file
+  mysql_db:
+        login_user: root
+        login_password: "{{ root_db_pass }}"
         name: newus3
-        state: import 
-        target: /tmp/people_create.sql  
-  when: db_configured == "no"
+        state: import
+        target: /tmp/people_create.sql
+  when: root_pwd_check.rc == 0
 
-- name: Copy over the gfac file 
-  copy: 
+- name: Copy over the gfac file
+  copy:
         src: gfac-db.sql
         dest: /tmp
-  when: db_configured == "no"
+  when: root_pwd_check.rc == 0
 
 - name: Inject gfac-db file for gfac
-  mysql_db: 
-        login_user: root 
-        login_password: "{{ root_db_pass }}" 
+  mysql_db:
+        login_user: root
+        login_password: "{{ root_db_pass }}"
         name: gfac
-        state: import 
+        state: import
         target: /tmp/gfac-db.sql
-  when: db_configured == "no"
+  when: root_pwd_check.rc == 0

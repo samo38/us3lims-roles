@@ -1,5 +1,5 @@
 ---
-- name: assert required variables are defined 
+- name: assert required variables are defined
   assert:
         that:
                 - us3_db_pass is defined
@@ -7,13 +7,21 @@
                 - root_db_pass is defined
                 - us3php_db_pass is defined
 
-- name: Create Folder for custom mariadb service file 
-  file: 
+- name: Install mariadb & additionals
+  dnf:
+    enablerepo: PowerTools
+    name:
+      - mariadb-server
+      - mariadb
+      - python3-PyMySQL
+
+- name: Create Folder for custom mariadb service file
+  file:
     path: /etc/systemd/system/mariadb.service.d/
     state: directory
 
-- name: Add custom limits systemd file for mariadb 
-  template: 
+- name: Add custom limits systemd file for mariadb
+  template:
        src: limits.conf.j2
        dest: /etc/systemd/system/mariadb.service.d/limits.conf
 
@@ -21,133 +29,144 @@
   systemd:
        daemon_reload: yes
 
-- name: Run mysql_install_db 
-  shell: /usr/bin/mysql_install_db
-  when: db_configured == "no"
-
-- name: Make sure mysql is owner of /var/lib/mysql
-  file: 
-    path: /var/lib/mysql
-    state: directory 
-    owner: mysql
-    group: mysql 
-    recurse: yes
-
-- name: Make sure mysql is owner of /var/log/mariadb
-  file: 
-    path: /var/log/mariadb
-    state: directory 
-    owner: mysql
-    group: mysql 
-    recurse: yes
-
 - name: start MariaDB
-  service: 
+  service:
        name: mariadb
        state: started
 
-- name: Set intial MariaDB root password 
-  shell: /usr/bin/mysqladmin -u root password "{{ root_db_pass }}" 
-  when: db_configured == "no"
+- name: check if root_pw_set
+  shell: mysqladmin -u root status
+  changed_when: false
+  failed_when: false
+  register: root_pwd_check
 
-- name: Change root database password  
-  mysql_user: 
+- name: Set intial MariaDB root password
+  shell: /usr/bin/mysqladmin -u root password "{{ root_db_pass }}"
+  when: root_pwd_check.rc == 0
+
+# This might be better to be moved to a standalone playbook
+- name: Change root database password
+  mysql_user:
         name: 'root'
-        host: "{{ item }}" 
+        host: "{{ item }}"
         append_privs: yes
-        password: "{{ root_db_pass }}" 
+        password: "{{ root_db_pass }}"
         login_user: root
-        login_password: "{{ root_old_db_pass }}" 
-  with_items: 
-        - "{{ ansible_fqdn }}" 
+        login_password: "{{ root_old_db_pass }}"
+  with_items:
+        - "{{ ansible_fqdn }}"
         - 127.0.0.1
         - localhost
         - ::1
   when: root_old_db_pass is defined
 
-- name: Remove anon user 
+- name: Remove anon user
   mysql_user:
           name: ''
           host_all: yes
-          state: absent 
+          state: absent
           login_user: root
-          login_password: "{{ root_db_pass }}" 
+          login_password: "{{ root_db_pass }}"
 
-- name: Create database 
-  include: create-database.yml 
+- name: Create database
+  include: create-database.yml
 
-- name: Grant us3 user USAGE 
-  mysql_user: 
+- name: Grant us3 user USAGE
+  mysql_user:
         name: '{{ us3_db_user }}'
-        host: "{{ item }}" 
+        host: "{{ item }}"
         append_privs: yes
         priv: '*.*:USAGE'
-        password: "{{ us3_db_pass }}" 
+        password: "{{ us3_db_pass }}"
         login_user: root
-        login_password: "{{ root_db_pass }}" 
-  with_items: 
-        - "{{ server_name }}" 
+        login_password: "{{ root_db_pass }}"
+  with_items:
+        - "{{ server_name }}"
         - 127.0.0.1
         - localhost
         - ::1
 
-- name: Grant us3php USAGE  
-  mysql_user: 
-        name: 'us3php' 
-        host: "{{ item }}" 
+- name: Grant us3php USAGE
+  mysql_user:
+        name: 'us3php'
+        host: "{{ item }}"
         priv: '*.*:USAGE'
         append_privs: yes
         password: '{{ us3php_db_pass }}'
         login_user: root
-        login_password: "{{ root_db_pass }}" 
-  with_items: 
-        - "{{ server_name }}" 
+        login_password: "{{ root_db_pass }}"
+  with_items:
+        - "{{ server_name }}"
         - 127.0.0.1
         - localhost
         - ::1
 
-- name: Grant us3 user ALL on newus3 
-  mysql_user: 
-        name: '{{ us3_db_user }}' 
-        host: "{{ item }}" 
+- name: Grant us3 user ALL on newus3
+  mysql_user:
+        name: '{{ us3_db_user }}'
+        host: "{{ item }}"
         priv: 'newus3.*:ALL'
         append_privs: yes
-        password: "{{ us3_db_pass }}" 
+        password: "{{ us3_db_pass }}"
         login_user: root
-        login_password: "{{ root_db_pass }}" 
-  with_items: 
-        - "{{ server_name }}" 
+        login_password: "{{ root_db_pass }}"
+  with_items:
+        - "{{ server_name }}"
         - 127.0.0.1
         - localhost
         - ::1
 
-- name: Grant us3php ALL on newus3 
-  mysql_user: 
-        name: 'us3php' 
-        host: "{{ item }}" 
+- name: Grant us3php ALL on newus3
+  mysql_user:
+        name: 'us3php'
+        host: "{{ item }}"
         priv: 'newus3.*:ALL'
         password: '{{ us3php_db_pass }}'
         append_privs: yes
         login_user: root
-        login_password: "{{ root_db_pass }}" 
-  with_items: 
-        - "{{ server_name }}" 
+        login_password: "{{ root_db_pass }}"
+  with_items:
+        - "{{ server_name }}"
         - 127.0.0.1
         - localhost
         - ::1
 
 - name: Grant gfac ALL on gfac
-  mysql_user: 
-        name: '{{ gbl_db_user }}' 
-        host: "{{ item }}" 
+  mysql_user:
+        name: '{{ gbl_db_user }}'
+        host: "{{ item }}"
         priv: "{{ gbl_db_name }}.*:ALL"
         append_privs: yes
-        password: '{{ gbl_db_pass }}' 
+        password: '{{ gbl_db_pass }}'
         login_user: root
-        login_password: "{{ root_db_pass }}" 
-  with_items: 
-        - "{{ server_name }}" 
+        login_password: "{{ root_db_pass }}"
+  with_items:
+        - "{{ server_name }}"
         - 127.0.0.1
         - localhost
         - ::1
 
+- name: Make sure path mysql ssl folder path exists
+  file:
+    path: /etc/my.cnf.d/ssl
+    state: directory
+    owner: mysql
+    group: mysql
+
+- name: Copy over mysql ssl files from ultrascan
+  copy:
+    src: "{{ item }}"
+    dest: /etc/my.cnf.d/ssl/{{ item }}
+    owner: mysql
+    group: mysql
+    mode: 0640
+  with_items:
+       - server-cert.pem
+       - server-key.pem
+       - ca-cert.pem
+
+- name: Copy over my.cnf
+  copy:
+    src: my.cnf
+    dest: /etc/my.cnf
+    backup: yes
