@@ -1,10 +1,14 @@
---- 
+---
+- name: restart munge
+  service:
+        name: munge
+        state: restarted
 - name: restart slurmctld
-  service: 
+  service:
         name: slurmctld
-        state: restarted 
+        state: restarted
 
 - name: restart slurmd
-  service: 
+  service:
         name: slurmd
         state: restarted

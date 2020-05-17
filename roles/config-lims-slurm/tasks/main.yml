@@ -1,6 +1,10 @@
---- 
-- name: install slurm dependencies  
-  dnf: 
+---
+- name: Get rpm package facts
+  package_facts:
+    manager: auto
+
+- name: install slurm dependencies
+  dnf:
         enablerepo: PowerTools
         name:
                 - globus-gram-job-manager-slurm
@@ -10,49 +14,64 @@
                 - pam-devel
                 - perl-ExtUtils-MakeMaker
                 - perl-Switch
-        state: present 
+                - rpm-build
+                - make
+                - gcc
+                - mariadb-devel
+        state: present
 
-- name: get slurm source 
-  get_url: 
+- name: check if munge key already exists
+  stat:
+    path: /etc/munge/munge.key
+  register: munge_key
+
+- name: create munge key
+  shell: "/usr/sbin/create-munge-key"
+  when: munge_key.stat.exists == false
+  notify:
+    - restart munge
+
+- name: get slurm source
+  get_url:
         url: "https://download.schedmd.com/slurm/slurm-{{ slurm_ver }}.tar.bz2"
-        dest: /tmp 
+        dest: /tmp
 
-- name: build slurm packages 
+- name: build slurm packages
   shell: "rpmbuild -ta /tmp/slurm-{{ slurm_ver }}.tar.bz2"
-  when: rpm_built == "no" 
+  when: "'slurm' not in ansible_facts.packages"
 
 
-- name: install built packages 
-  shell: "yum install ./slurm*  -y" 
-  args: 
-        chdir: /root/rpmbuild/RPMS/x86_64 
-  when: rpm_built == "no" 
+- name: install built packages
+  shell: "yum install ./slurm*  -y"
+  args:
+        chdir: /root/rpmbuild/RPMS/x86_64
+  when: "'slurm' not in ansible_facts.packages"
 
-- name: Create slurm user 
-  user: 
+- name: Create slurm user
+  user:
         name: slurm
-        state: present 
+        state: present
         system: yes
 
-- name: create slurm log dir 
-  file: 
+- name: create slurm log dir
+  file:
         path: /var/log/slurm/
         owner: slurm
         group: slurm
         state: directory
 
-- name: create slurm spool dir 
-  file: 
+- name: create slurm spool dir
+  file:
         path: /var/spool/slurm
         owner: slurm
-        group: slurm 
+        group: slurm
         state: directory
 
-- name: config slurm.conf 
-  template: 
+- name: config slurm.conf
+  template:
         src: slurm.conf.j2
-        dest: /etc/slurm/slurm.conf 
+        dest: /etc/slurm/slurm.conf
         backup: yes
-  notify: 
-        - restart slurmd 
+  notify:
+        - restart slurmd
         - restart slurmctld
