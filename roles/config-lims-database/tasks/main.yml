@@ -6,6 +6,7 @@
                 - gbl_db_pass is defined
                 - root_db_pass is defined
                 - us3php_db_pass is defined
+                - admins_db_pass is defined
 
 - name: Install mariadb & additionals
   dnf:

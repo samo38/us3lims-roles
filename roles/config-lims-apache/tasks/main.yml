@@ -11,11 +11,6 @@
         group: apache
         state: directory
 
-#- name: Check if certs are already created/inplace for letsencrypt
-#  stat:
-#        path: "/etc/letsencrypt/live/{{ ansible_fqdn  }}/"
-#  register: cert_path
-
 - include_role:
          name: geerlingguy.certbot
   when: self_signed == 'no'

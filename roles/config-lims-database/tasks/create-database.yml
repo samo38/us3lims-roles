@@ -58,3 +58,25 @@
         state: import
         target: /tmp/gfac-db.sql
   when: root_pwd_check.rc == 0
+
+  # insert default admins for newus3_db
+- name: Create a temp people sql file for dumping admins to newus3 database
+  template:
+          src: new_people_inject.sql.j2
+          dest: /tmp/new_people_inject.sql
+  when: root_pwd_check.rc == 0
+
+- name: Inject the temp people sql file
+  mysql_db:
+        login_user: root
+        login_password: "{{ root_db_pass }}"
+        name: newus3
+        state: import
+        target: /tmp/new_people_inject.sql
+  when: root_pwd_check.rc == 0
+
+- name: Clean up tmp people sql file
+  file :
+        path: /tmp/new_people_inject.sql
+        state: absent
+  when: root_pwd_check.rc == 0

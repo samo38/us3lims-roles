@@ -1,5 +1,10 @@
 ---
 # 1009 was picked just to follow the uid on demeler3
+- name: install dependencies
+  dnf:
+    name:
+      - git
+      - httpd
 - name: Create group for us3
   group:
     name: us3
@@ -37,11 +42,3 @@
    repo: https://github.com/ehb54/us3lims_gridctl.git
    version: "{{ branch }}"
    dest: "/home/us3/lims/bin"
-
-# - name: Ensure correct permissions in LIMS for us3 user
-#   file:
-#     path: "/home/us3/lims"
-#     owner: "us3"
-#     group: "us3"
-#     recurse: yes
-#     state: directory

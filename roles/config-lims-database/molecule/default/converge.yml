@@ -6,6 +6,7 @@
     root_db_pass: foobar-super
     gbl_db_pass: foobar-g
     us3php_db_pass: foobar-php
+    admins_db_pass: foobar-admin
   tasks:
     - name: "Setup epel repo via geerlingguy"
       include_role:

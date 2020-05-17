@@ -1,0 +1,28 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    - us3_db_pass: foobar-us3
+    - us3php_db_pass: foobar-php
+    - gbl_db_pass: foobar-gbl
+    - limsadmin_db_pass: foobar-lam
+    - admins_db_pass: foobar-admin
+    - self_signed: 'yes'
+    - ipaddr_ext: 127.0.0.1
+    - ipaddr_int: 127.0.0.1
+  tasks:
+    - name: "Setup epel repo via geerlingguy"
+      include_role:
+        name: "geerlingguy.repo-epel"
+    - name: "Include config-lims-us3-user"
+      include_role:
+        name: "config-lims-us3-user"
+    - name: "Include config-lims-apache"
+      include_role:
+        name: "config-lims-apache"
+    - name: "Include config-lims-php"
+      include_role:
+        name: "config-lims-php"
+    - name: "Include config-lims-lims"
+      include_role:
+        name: "config-lims-lims"
