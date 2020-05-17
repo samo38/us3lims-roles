@@ -14,5 +14,38 @@ matrix:
         - molecule --version
         - ansible --version
         - molecule test
+
+- env: config-lims-slurm
+  before_script: 
+    - cd ${TRAVIS_BUILD_DIR}/roles/config-lims-slurm
+  script: 
+    - molecule --version
+    - ansible --version
+    - molecule test
+
+- env: config-lims-database
+  before_script: 
+    - cd ${TRAVIS_BUILD_DIR}/roles/config-lims-database
+  script: 
+    - molecule --version
+    - ansible --version
+    - molecule test
+
+- env: config-lims-lims
+  before_script: 
+    - cd ${TRAVIS_BUILD_DIR}/roles/config-lims-lims
+  script: 
+    - molecule --version
+    - ansible --version
+    - molecule test
+
+- env: config-lims-us3-user
+  before_script: 
+    - cd ${TRAVIS_BUILD_DIR}/roles/config-lims-us3-user
+  script: 
+    - molecule --version
+    - ansible --version
+    - molecule test
+
 on:
   branch: master
