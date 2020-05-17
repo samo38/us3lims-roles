@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: create apache user
+      user:
+        name: apache
+        state: present
+    - name: "Include config-lims-us3-user"
+      include_role:
+        name: "config-lims-us3-user"
