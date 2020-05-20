@@ -6,6 +6,12 @@ This repository is a collection of ansible roles that are used to deploy and kee
 
 current roles travis/molecule tested: 
 - config-lims-php
+- config-lims-lims
+- config-lims-slurm
+- config-lims-us3-user
+- config-lims-database
+
+Builds are currently all on Centos8
 
 **This is still in the Work In Progress stage.** 
 
@@ -13,23 +19,12 @@ current roles travis/molecule tested:
 Currently, we still have more testing and fixes to deal with. Particularly related with getting SSL configured to work with US3 for mysql encrypted mysql connections. This has only been tested on CentOS 8 thus far. 
 
 ### TODO 
-- mysql certificates and linking them properly and related configurations
-- Probably more work related to gridctrl
-- Misc unknown ghosts 
-- test on CentOS 7 (and maybe Debian/OpenSuse/RHEL ?) 
-- variable clean up - probably 
-- To be approved as a viable method to even deploy LIMS and keep LIMS up to date :) 
+
+Moved to wiki/issues/project..
 
 ## Summary of 'what does it do?' thus far
 
-So far the roles featured here will (or mostly will):
-- Install the required packages needed for setting up LIMS
-- Configure the us3 user including it's home, and cloning the git gridctl and sql scrip repos
-- Install/keep up to date the database including user privs/permissions and databases that should exist 
-- Install and configure apache - including automating the letsencrypt certificates 
-- Install and configure php
-- Clone and configure the three main LIMS web portions: webinfo, common and newinst
-
+Please review the wiki 
 
 ## Getting Started
 
@@ -51,13 +46,7 @@ ansible-galaxy -r requirements.yml
 
 ## Using it
 
-There are two main roles: 
-
-1. **initial-lims-deploy**
-
-2. **update-lims-confs**
-
-currently, there isn't a much of a difference between the two other than db_configured. This is just to prevent some of the initial setup related to root and inserting tables. 
+Modifying the example-playbook.yml is a good starting ground. 
 
 ### Some required variable definitons: 
 
@@ -69,6 +58,8 @@ currently, there isn't a much of a difference between the two other than db_conf
  
 `us3php_db_pass` - database password for us3php user 
 
+`limsadmin_db_pass` - database password for limsadmin 
+
 `admin_email` - Email of Admin that will be primarily responsible for the LIMS server 
 
 `admins_db_pass` - Initial DB password for all admins - Defaults are for Alexey, Borries and Gary
@@ -77,35 +68,6 @@ currently, there isn't a much of a difference between the two other than db_conf
 
 `ipaddr_int` - The internal IP address of the host
 
-### Example Playbook 
-
-Here is an example playbook using the roles: 
-
-
-**foobar-lims.yml:**
-```
----
-- hosts: foo.bar
-  become: yes
-  roles:
-         #- role: initial-lims-deploy - If LIMS has already been 'deployed' 
-          - role: /update-lims-confs # If just updating configurations/packages 
-  vars: 
-        # Required variables to define: 
-        - us3_db_pass: "example-password-us3"
-        - root_db_pass: "example-password-root" 
-        - gbl_db_pass: "example-password-gfac"
-        - us3php_db_pass: "example-password-php"
-        - admin_email: "exampl@foo.bar"
-        - admins_db_pass: "examle-password-default-admin"
-        - ipaddr_ext: "192.168.0.5"
-        - ipaddr_int: "127.0.0.1"
-
-        # Overrride variables that are default 
-        - lims_admin: "Your Name" 
-        - org_name: "Ultrascan foo.bar LIMS" 
-        - branch: develop
-```
 
 ### Running it: 
 ```
@@ -133,7 +95,6 @@ To run the playbook now you can use `--ask-vault` to be prompted for a password.
 ```
 ansible-playbook foobar-lims.yml --ask-vault
 ``` 
-
 
 Oh no! How will you edit this now? 
 
