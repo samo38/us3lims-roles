@@ -6,12 +6,15 @@ install:
   - pip install molecule docker
 env:
   global: 
-    ROLE_NAME: 
-      - config-lims-php
-      - config-lims-apache
+    - MOLECULE_DISTRO: centos8 
 
   matrix: 
-    - MOLECULE_DISTRO: centos8
+    - ROLE_NAME: config-lims-apache
+    - ROLE_NAME: config-lims-php
+    - ROLE_NAME: config-lims-lims
+    - ROLE_NAME: config-lims-slurm
+    - ROLE_NAME: config-lims-us3-user
+    - ROLE_NAME: config-lims-database
 
 
 before_script: 
