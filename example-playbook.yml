@@ -1,0 +1,42 @@
+---
+- hosts: all
+  pre_tasks:
+       - name: disable selinux
+         selinux:
+            state: disabled
+  roles:
+        - config-lims-repo
+        - config-lims-us3-user
+        - config-lims-database
+        - config-lims-apache
+        - config-lims-php
+        - config-lims-lims
+        - config-lims-firewall
+  become: yes
+  vars:
+        # Required variables to define:
+        - us3_db_pass: "foobar-demo"
+        - root_db_pass: "foobar-super"
+        - admins_db_pass: "foobar-admin"
+        - gbl_db_pass: "foobar-global"
+        - us3php_db_pass: "foobar-php"
+        
+        - limsadmin_db_pass: "foobar-iam-admin" 
+
+        - admin_email: "example@email.org"
+        
+        - ipaddr_ext: "192.168.5.30"
+        - ipaddr_int: "192.168.5.30"
+        
+        - self_signed: 'yes'
+
+        - cerbot_admin_email: "{{ admin_email }}" 
+        - certbot_create_standalone_stop_services: [httpd] # centos/RHEL 
+        - cerbot_certs: 
+            - domains: 
+                  - "{{ ansible_fqdn }}" 
+
+        # Overrride variables that are default
+        - lims_admin: "John Smith"
+        - org_name: "Ultrascan Example LIMS"
+
