@@ -8,6 +8,7 @@ env:
   global: 
     ROLE_NAME: 
       - config-lims-php
+      - config-lims-apache
 
   matrix: 
     - MOLECULE_DISTRO: centos8
