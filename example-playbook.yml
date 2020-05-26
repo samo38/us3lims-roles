@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: example-host
   pre_tasks:
        - name: disable selinux
          selinux:
@@ -29,15 +29,22 @@
         - ipaddr_ext: "192.168.5.30"
         - ipaddr_int: "192.168.5.30"
         
-        - self_signed: 'yes' 
-        
-        - cerbot_admin_email: "{{ admin_email }}" 
+        - self_signed: 'yes' # change to 'no' to use certbot 
+
+        # Doesn't matter if self-signed is enabled but here as an example for some certbot uses
+        - certbot_create_if_missing: true
+        - certbot_admin_email: "{{ admin_email }}" 
         - certbot_create_standalone_stop_services: [httpd] # centos/RHEL 
-        - cerbot_certs: 
+        - certbot_certs: 
             - domains: 
                   - "{{ ansible_fqdn }}" 
-                  
-        - slurm_ver: 20.02.2
+
+        - certbot_auto_renew: true 
+        - certbot_auto_renew_hour: "1" 
+        - certbot_auto_renew_minute: "30" 
+        - cerbot_auto_renew_options: "--quiet --no-self-upgrade"
+
+        - slurm_ver: 20.02.2 # Change to appropriate version 
 
         # Overrride variables that are default
         - lims_admin: "John Smith"
