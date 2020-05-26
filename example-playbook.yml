@@ -11,7 +11,7 @@
         - config-lims-apache
         - config-lims-php
         - config-lims-lims
-        - config-lim-slurm
+        - config-lims-slurm
         - config-lims-firewall
   become: yes
   vars:
