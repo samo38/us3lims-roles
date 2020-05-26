@@ -8,6 +8,7 @@
     - gegorbet
     - demeler
     - alexey
+    - ehb
 
 - name: Add authorized keys
   authorized_key:
@@ -17,3 +18,4 @@
     - gegorbet
     - alexey
     - demeler
+    - ehb
