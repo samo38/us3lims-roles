@@ -41,7 +41,7 @@ There are a couple of ansible roles used developed by [geerlingguy](https://gala
 Run ansible-galaxy on the requirements.yml file to obtain the roles. 
 
 ```
-ansible-galaxy -r requirements.yml
+ansible-galaxy install -r requirements.yml
 ```
 
 ## Using it
