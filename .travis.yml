@@ -15,6 +15,7 @@ env:
     - ROLE_NAME: config-lims-slurm
     - ROLE_NAME: config-lims-us3-user
     - ROLE_NAME: config-lims-database
+    - ROLE_NAME: config-lims-firewall
 
 
 before_script: 
