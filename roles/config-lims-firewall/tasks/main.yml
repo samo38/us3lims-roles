@@ -8,6 +8,7 @@
   service: 
     name: firewalld
     state: started
+  changed_when: false
  
 - name: Configure firewall rules 
   firewalld:
