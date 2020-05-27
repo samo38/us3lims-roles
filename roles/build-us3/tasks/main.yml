@@ -1,0 +1,21 @@
+- name: copy over local.pri
+  template: 
+       src: local.pri.j2
+       dest: /opt/ultrascan3/local.pri
+
+- name: make ultrascan3 & somo
+  shell: ./makeall.sh -j 64
+  args: 
+    chdir: /opt/ultrascan3/
+  environment: 
+    PATH: $PATH:/opt/qt-5.12/bin/
+    QTDIR: /opt/qt-5.12
+    QWTDIR: /usr/local/qwt-6.1.4
+
+    US3DIR: /opt/ultrascan3
+    QTBIN: $QTDIR/bin
+    QTLIB: $QTBIN/lib
+    QTINC: $QTDIR/include
+    US3BIN: $US3DIR/bin
+    US3LIB: $US3DIR/lib
+    LD_LIBRARY: ${US3LIB}:${QTLIB}:${QWTLIB}:${OLPATH}:${USDIR}

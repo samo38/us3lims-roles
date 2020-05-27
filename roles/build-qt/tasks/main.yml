@@ -1,0 +1,42 @@
+# TODO: create a default variables for this to make it easier in the future
+- name: Check if expected qt path exists
+  stat: 
+    path: /opt/qt-5.12
+  register: qt_details 
+
+- name: Check if qt has been downloaded 
+  stat: 
+    path: /tmp/qt-5.12/
+  register: qt_git_details 
+
+# this should reaslly probably be a handler 
+- name: Get QT 5.12 Repo
+  git: 
+    repo: https://code.qt.io/qt/qt5.git
+    dest: /tmp/qt-5.12/
+    version: 5.12
+  when: qt_git_details.stat.exists == false
+
+- name: Clear Git folder for clean build
+  shell: git clean -dfx
+  args:
+    chdir: /tmp/qt-5.12
+  register: qt_details.stat.exists == false 
+
+- name: configure qt 5.12
+  shell: /tmp/qt-5.12/configure -prefix /opt/qt-5.12 -release -opensource -confirm-license -platform linux-g++-64 -nomake tests -nomake examples -opengl desktop -xcb -plugin-sql-mysql -plugin-sql-psql -openssl-linked -system-proxies -D QT_SHAREDMEMORY -D QT_SYSTEMSEMAPHORE -no-icu 
+  args:
+    chdir: /tmp/qt-5.12
+  when: qt_details.stat.exists == false 
+
+- name: build qt-5.12
+  shell: gmake -j64 > /tmp/qt-5.12.build.log
+  args:
+    chdir: /tmp/qt-5.12
+  when: qt_details.stat.exists == false
+
+- name: make install qt-5.12
+  shell: gmake install -j64 > /tmp/qt-5.12.install.log
+  args:
+     chdir: /tmp/qt-5.12
+  when: qt_details.stat.exists == false

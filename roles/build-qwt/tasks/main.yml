@@ -1,0 +1,26 @@
+---
+- name: get qwt
+  get_url: 
+        url: https://sourceforge.net/projects/qwt/files/qwt/6.1.4/qwt-6.1.4.tar.bz2/download
+        dest: /tmp/qwt-6.1.4.tar.bz2
+
+- name: unzip qwt
+  unarchive: 
+         src: /tmp/qwt-6.1.4.tar.bz2
+         dest: /tmp/
+         remote_src: yes
+
+- name: conf qwt
+  shell: /opt/qt-5.12/bin/qmake qwt.pro
+  args:
+     chdir: /tmp/qwt-6.1.4
+
+- name: compile qwt
+  shell: make -j 64
+  args:
+     chdir: /tmp/qwt-6.1.4
+
+- name: install qwt
+  shell: make install 
+  args: 
+    chdir: /tmp/qwt-6.1.4
