@@ -25,6 +25,7 @@
         - limsadmin_db_pass: "foobar-iam-admin" 
 
         - admin_email: "example@email.org"
+        - cron_admin: "example@email.org" # root@localhost 
         
         - ipaddr_ext: "192.168.5.30"
         - ipaddr_int: "192.168.5.30"

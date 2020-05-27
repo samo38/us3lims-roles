@@ -10,6 +10,7 @@ current roles travis/molecule tested:
 - config-lims-slurm
 - config-lims-us3-user
 - config-lims-database
+- config-lims-firewall
 
 Builds are currently all on Centos8
 
@@ -67,6 +68,8 @@ Modifying the example-playbook.yml is a good starting ground.
 `ipaddr_ext` - External/Public facing IP address of the LIMS server 
 
 `ipaddr_int` - The internal IP address of the host
+ 
+`cron_admin` - MAILTO cron admin needs to be defined. 
 
 
 ### Running it: 
