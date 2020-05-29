@@ -102,7 +102,10 @@
   copy:
     src: us3-listen.service
     dest: /etc/systemd/system/us3-listen.service
-  notify: reload daemon
+
+- name: Reload systemd daemon
+  systemd: 
+    daemon_reload: yes
 
 - name: Start us3-listen service
   service:

@@ -13,7 +13,6 @@
     name: MAILTO
     env: yes
     job: "{{ cron_admin }}"
-    cron_file: /etc/crontab
 
 - name: Set gridctl_pro cronjob
   cron:
