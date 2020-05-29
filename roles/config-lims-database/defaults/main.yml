@@ -1,3 +1,4 @@
+---
 us3_db_host: "localhost"
 us3_db_name: "newus3"
 us3_db_user: "new_us3user"
@@ -6,8 +7,13 @@ gbl_db_host: "localhost"
 gbl_db_name: "gfac"
 gbl_db_user: "gfac"
 
-db_configured: "yes"
+lims3_db_user: "lims3_admin"
+
 server_name: "{{ ansible_fqdn }}"
+
+sql_ssl_ca: "/etc/my.cnf.d/ssl/ca-cert.pem"
+sql_ssl_cert: "/etc/my.cnf.d/ssl/server-cert.pem"
+sql_ssl_key: "/etc/my.cnf.d/ssl/server-key.pem"
 
 # admin users
 admin_users:
