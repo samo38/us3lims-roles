@@ -5,6 +5,7 @@
     name:
       - git
       - httpd
+      - php
 
 - name: Create group for us3
   group:
@@ -57,6 +58,13 @@
    version: "{{ branch }}"
    dest: "/home/us3/lims/bin"
 
+- name: Change permissions in gridctl
+  file:
+      path: /home/us3/lims/bin
+      state: directory
+      recurse: yes
+  changed_when: false
+
 - name: template listen-config.php
   template:
     src: listen-config.php.j2
@@ -71,6 +79,8 @@
   file:
     path: /home/us3/lims/etc
     state: directory
+    owner: us3
+    group: us3
   when: etc_folder.stat.exists == false
 
 - name: check if us3-pipe exists
@@ -81,55 +91,21 @@
 - name: Create us3-pipe
   shell:
     cmd: mkfifo /home/us3/lims/etc/us3-pipe
+  become_user: us3
+  become: yes
   when: us3pipe.stat.exists == false
 
-# https://habilis.net/cronic/
-- name: Copy over cronic script
-  copy:
-    src: cronic
-    dest: /usr/bin/cronic
-    mode: '0755'
-    owner: root
-    group: root
-
-- name: Set Cron Admin
-  cron:
-    name: MAILTO
-    env: yes
-    job: "{{ cron_admin }}"
-
-- name: Set gridctl_pro cronjob
-  cron:
-    name: gridctl_pro cronjob
-    minute: "*/1"
-    job: /usr/bin/cronic php /home/us3/lims/bin/gridctl_pro.php
-    user: us3
-  when: cron_enable_pro == 'yes'
-
-- name: set gridctl_dev cronjob
-  cron:
-    name: gridctl_dev cronjob
-    minute: "*/1"
-    job: /usr/bin/cronic php /home/us3/lims/bin/gridctl_dev.php
-    user: us3
-  when: cron_enable_dev == 'yes'
-
-- name: set cluster_status cronjob
-  cron:
-    name: cluster_status cronjob
-    minute: "*/12"
-    job: /usr/bin/cronic php /home/us3/lims/bin/cluster_status.php
-    user: us3
-
-- name: set update_notice cronjob
-  cron:
-    name: update_notice cronjob
-    minute: "*/20"
-    job: /usr/bin/cronic php /home/us3/lims/bin/update_notice.php
-    user: us3
-  when: cron_enable_update_notice == 'yes'
+- name: Include cron related tasks
+  include: cron-tasks.yml
 
 - name: Copy over us3-listen.service
   copy:
     src: us3-listen.service
     dest: /etc/systemd/system/us3-listen.service
+  notify: reload daemon
+
+- name: Start us3-listen service
+  service:
+    name: us3-listen
+    state: started
+  changed_when: false

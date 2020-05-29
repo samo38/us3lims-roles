@@ -5,8 +5,7 @@ After=network-online.target
 
 [Service]
 User=us3
-group=us3
 
 Type=simple
 
-ExecStart=php /home/us3/lims/bin/listen.php 
+ExecStart=php /home/us3/lims/bin/listen.php
