@@ -36,10 +36,26 @@
         url: "https://download.schedmd.com/slurm/slurm-{{ slurm_ver }}.tar.bz2"
         dest: /tmp
 
+
+- name: Get slurm package checksum
+  stat:
+    path: "/tmp/slurm-{{ slurm_ver }}.tar.bz2"
+    checksum_algorithm: "{% if slurm_md5 %}md5{% else %}sha1{% endif %}"
+    get_checksum: yes
+  register: slurm_integrity
+  when: slurm_md5 is defined or slurm_sha1 is defined
+
+- name: Checksum error
+  debug:
+    msg:
+      - "Hash not the same"
+      - "{{ slurm_integrity.stat.checksum }}"
+      - "{{ slurm_hash }}"
+  when: "slurm_hash != slurm_integrity.stat.checksum and (slurm_md5 is defined or slurm_sha1)"
+
 - name: build slurm packages
   shell: "rpmbuild -ta /tmp/slurm-{{ slurm_ver }}.tar.bz2"
-  when: "'slurm' not in ansible_facts.packages"
-
+  when: "'slurm' not in ansible_facts.packages and slurm_integrity.stat.checksum == slurm_hash"
 
 - name: install built packages
   shell: "yum install ./slurm*  -y"
