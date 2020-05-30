@@ -20,39 +20,42 @@
     shell: /bin/bash
     state: present
 
-- name: check if lims instance folder exists
-  stat:
-    path: /home/us3/lims/database/instances
-  register: instance_folder
-
 - name: create instances folder
   file:
     path: '/home/us3/lims/database/instances'
     state: directory
     owner: us3
     group: apache
-  when: instance_folder.stat.exists == false
 
-- name: check if work folder exists
-  stat:
-    path: /home/us3/lims/work
-  register: work_folder
-
-- name: create work folder
+- name: Make sure work folder exists
   file:
     path: '/home/us3/lims/work'
     state: directory
     owner: us3
     group: apache
-  when: work_folder.stat.exists == false
 
-- name: git mysql scripts
+- name: Make sure scripts folder exists
+  file:
+    path: '/home/us3/lims/scripts'
+    state: directory
+    owner: us3
+    group: us3
+
+- name: Copy over make-uma-uiab script
+  copy:
+    src: 'make-uma-uiab'
+    dest: '/home/us3/lims/scripts/make-uma-uiab'
+    owner: us3
+    group: us3
+    mode: 0755
+
+- name: git clone us3_mysql repository
   git:
    repo: https://github.com/ehb54/us3_sql.git
    version: "{{ branch }}"
    dest: "/home/us3/lims/database/sql"
 
-- name: git gridctl scripts
+- name: git clone gridctl repository to bin
   git:
    repo: https://github.com/ehb54/us3lims_gridctl.git
    version: "{{ branch }}"
@@ -70,18 +73,12 @@
     src: listen-config.php.j2
     dest: /home/us3/lims/bin/listen-config.php
 
-- name: Check if us3/lims/etc folder exists
-  stat:
-    path: /home/us3/lims/etc
-  register: etc_folder
-
 - name: Create us3/etc
   file:
     path: /home/us3/lims/etc
     state: directory
     owner: us3
     group: us3
-  when: etc_folder.stat.exists == false
 
 - name: check if us3-pipe exists
   stat:
@@ -104,7 +101,7 @@
     dest: /etc/systemd/system/us3-listen.service
 
 - name: Reload systemd daemon
-  systemd: 
+  systemd:
     daemon_reload: yes
 
 - name: Start us3-listen service
