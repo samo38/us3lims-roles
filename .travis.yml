@@ -22,7 +22,7 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}/roles/${ROLE_NAME} 
  
 script: 
-  - molecule test 
+  - molecule test --all
 
 on:
   branch: master

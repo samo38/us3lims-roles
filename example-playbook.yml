@@ -45,7 +45,8 @@
         - certbot_auto_renew_minute: "30" 
         - cerbot_auto_renew_options: "--quiet --no-self-upgrade"
 
-        - slurm_ver: 20.02.2 # Change to appropriate version 
+        - slurm_ver: 20.02.3 # Change to appropriate version 
+        - slurm_md5: c71a300d6c5d33ef8ca60e52a203bb1e
 
         # Overrride variables that are default
         - lims_admin: "John Smith"
