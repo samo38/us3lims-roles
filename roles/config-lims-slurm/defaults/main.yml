@@ -1,3 +1,5 @@
 cluster_name: localhost 
 control_machine: localhost 
 cores: 2
+slurm_md5: 'none'
+slurm_sha1: 'none'
