@@ -13,6 +13,7 @@
   dnf:
     name:
       - git
+    update_cache: yes
 
 # Create ini file
 - name: Create LIMS ini file

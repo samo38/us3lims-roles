@@ -19,6 +19,7 @@
                 - gcc
                 - mariadb-devel
         state: present
+        update_cache: yes
 
 - name: check if munge key already exists
   stat:

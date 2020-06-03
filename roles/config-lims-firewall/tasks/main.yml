@@ -3,6 +3,7 @@
   dnf: 
     name: 
       - firewalld 
+    update_cache: yes
 
 - name: Ensure firewalld is started 
   service: 

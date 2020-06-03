@@ -3,6 +3,7 @@
     name:
       - httpd
       - mod_ssl
+    update_cache: yes
 
 - name: Ensure www path exists
   file:

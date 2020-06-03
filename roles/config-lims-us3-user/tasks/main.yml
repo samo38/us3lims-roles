@@ -6,6 +6,7 @@
       - git
       - httpd
       - php
+    update_cache: yes
 
 - name: Create group for us3
   group:

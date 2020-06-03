@@ -15,6 +15,7 @@
       - mariadb-server
       - mariadb
       - python3-PyMySQL
+    update_cache: yes
 
 - name: Create Folder for custom mariadb service file
   file:
