@@ -5,6 +5,15 @@
       - mod_ssl
     update_cache: yes
 
+- name: Enable service httpd, and not touch the state
+  service:
+        name: httpd
+        enabled: yes
+- name: Start service httpd, if not started
+  service:
+        name: httpd
+        state: started
+
 - name: Ensure www path exists
   file:
         path: "{{ www_base }}"

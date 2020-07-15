@@ -19,3 +19,52 @@
     - alexey
     - demeler
     - ehb
+
+- name: "Install emacs-nox via yum"
+  yum:
+    name: emacs-nox
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: "Install emacs-nox via apt"
+  apt:
+    name: emacs-nox
+    state: present
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: "Copy .emacs to ~/ehb"
+  copy:
+    src: files/dot_emacs
+    dest: ~ehb/.emacs
+    owner: ehb
+    group: ehb
+    mode: u=rw,g=r,o=r
+
+- name: Creates directory
+  file:
+    path: ~ehb/bin
+    state: directory
+
+- name: "Copy e to ~ehb/bin"
+  copy:
+    src: files/e
+    dest: ~ehb/bin/e
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+
+- name: "Copy s to ~ehb/bin"
+  copy:
+    src: files/s
+    dest: ~ehb/bin/s
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+
+- name: "Copy lth to ~ehb/bin"
+  copy:
+    src: files/lth
+    dest: ~ehb/bin/lth
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx

@@ -1,10 +1,20 @@
 ---
 - hosts: example-host
+  remote_user: usadmin
+
   pre_tasks:
        - name: disable selinux
          selinux:
             state: disabled
+       - name: update system
+         yum: name=* state=latest
+         when: ansible_facts['os_family'] == "RedHat"
+       - name: install EPEL repo
+         yum: name=epel-release state=present
+         when: ansible_facts['os_family'] == "RedHat"
+
   roles:
+        - config-lims-admin
         - config-lims-firewall
         - config-lims-repo
         - config-lims-us3-user
@@ -13,6 +23,7 @@
         - config-lims-php
         - config-lims-lims
         - config-lims-slurm
+
   become: yes
   vars:
         # Required variables to define:
