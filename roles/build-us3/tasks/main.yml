@@ -1,16 +1,22 @@
+- name: git clone ultrascan3 repository
+  git:
+   repo: https://github.com/ehb54/ultrascan3.git
+   version: "{{ us3_branch }}"
+   dest: "/opt/ultrascan3"
+
 - name: copy over local.pri
   template: 
        src: local.pri.j2
        dest: /opt/ultrascan3/local.pri
 
 - name: make ultrascan3 & somo
-  shell: ./makeall.sh -j 64
-  args: 
-    chdir: /opt/ultrascan3/
+  shell:
+    chdir: /opt/ultrascan3
+    cmd: ./makeall.sh -j {{ cores_for_parallel_compile }} > build.stdout 2> build.stderr
   environment: 
-    PATH: $PATH:/opt/qt-5.12/bin/
-    QTDIR: /opt/qt-5.12
-    QWTDIR: /usr/local/qwt-6.1.4
+    PATH: /opt/qt-{{ qt_version }}/bin/:/usr/bin:/usr/local/bin:/bin
+    QTDIR: /opt/qt-{{ qt_version }}
+    QWTDIR: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
 
     US3DIR: /opt/ultrascan3
     QTBIN: $QTDIR/bin
@@ -19,3 +25,5 @@
     US3BIN: $US3DIR/bin
     US3LIB: $US3DIR/lib
     LD_LIBRARY: ${US3LIB}:${QTLIB}:${QWTLIB}:${OLPATH}:${USDIR}
+
+  

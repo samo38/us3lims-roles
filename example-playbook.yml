@@ -25,6 +25,7 @@
         - config-lims-slurm
 #        - build-qt
 #        - build-qwt
+#        - build-us3
 
   become: yes
   vars:
@@ -49,6 +50,7 @@
         - qt_version: "5.14.2"
         - qwt_version: "6.1.5"
         - cores_for_parallel_compile: 4
+        - us3_branch: "master"
 
         # Doesn't matter if self-signed is enabled but here as an example for some certbot uses
         - certbot_create_if_missing: true
