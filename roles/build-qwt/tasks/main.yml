@@ -1,26 +1,57 @@
 ---
-- name: get qwt
-  get_url: 
-        url: https://sourceforge.net/projects/qwt/files/qwt/6.1.4/qwt-6.1.4.tar.bz2/download
-        dest: /tmp/qwt-6.1.4.tar.bz2
 
-- name: unzip qwt
-  unarchive: 
-         src: /tmp/qwt-6.1.4.tar.bz2
-         dest: /tmp/
-         remote_src: yes
+- name: Check if qwt already installed, using /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}/lib/libqwt.so as a proxy
+  stat: 
+    path: /opt/qwt-{{ qwt_version }}-qt-{{ qt_version }}/lib/libQt5Core.so
+  register: qwt_installed_details
 
-- name: conf qwt
-  shell: /opt/qt-5.12/bin/qmake qwt.pro
-  args:
-     chdir: /tmp/qwt-6.1.4
+- name: Install, configure and compile qwt
+  block:
+    - name: Check if qwt-{{ qwt_version }}.tar.bz2 is downloaded
+      stat:
+        path: /opt/qwt-{{ qwt_version }}.tar.bz2
+      register: qwt_src_details
 
-- name: compile qwt
-  shell: make -j 64
-  args:
-     chdir: /tmp/qwt-6.1.4
+    - name: Download qwt-{{ qwt_version }}
+      get_url: 
+#        url: https://sourceforge.net/project/qwt/files/qwt/{{ qwt_version }}/qwt-{{ qwt_version }}.tar.bz2/download
+        url: https://gigenet.dl.sourceforge.net/project/qwt/qwt/{{ qwt_version }}/qwt-{{ qwt_version }}.tar.bz2
+        dest: /opt/qwt-{{ qwt_version }}.tar.bz2
+      when: qwt_src_details.stat.exists == false
 
-- name: install qwt
-  shell: make install 
-  args: 
-    chdir: /tmp/qwt-6.1.4
+    - name: Check if qwt-{{ qwt_version }}.tar.bz2 is extracted
+      stat:
+        path: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}/qwt.pro
+      register: qwt_src_extracted_details
+
+    - name: Create a directory if it does not exist
+      file:
+        path: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+        state: directory
+        mode: '0755'
+      when: qwt_src_extracted_details.stat.exists == false
+              
+    - name: Extract qwt-{{ qwt_version }}
+      command:
+        chdir: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+        cmd: tar jxf /opt/qwt-{{ qwt_version }}.tar.bz2 --strip-components=1 
+        warn: false
+      when: qwt_src_extracted_details.stat.exists == false
+
+    - name: Configure qwt
+      shell:
+        chdir: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+        cmd: /opt/qt-{{ qt_version }}/bin/qmake qwt.pro
+
+    - name: compile qwt
+      shell:
+        chdir: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+        cmd: make -j {{ cores_for_parallel_compile }} > build.stdout 2> build.stderr
+
+#    - name: install qwt
+#      shell:
+#        chdir: /tmp/qwt-{{ qwt_version }}
+#        cmd: make install 
+#      when: false == true
+
+  when: qwt_installed_details.stat.exists == false

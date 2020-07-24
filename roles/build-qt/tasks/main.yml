@@ -1,42 +1,89 @@
-# TODO: create a default variables for this to make it easier in the future
-- name: Check if expected qt path exists
+---
+
+- name: Check if qt already installed, using /opt/qt-{{ qt_version }}/lib/libQt5Core.so as a proxy
   stat: 
-    path: /opt/qt-5.12
-  register: qt_details 
+    path: /opt/qt-{{ qt_version }}/lib/libQt5Core.so
+  register: qt_installed_details
 
-- name: Check if qt has been downloaded 
-  stat: 
-    path: /tmp/qt-5.12/
-  register: qt_git_details 
+- name: Install, configure and compile qt
+  block:
+    - name: Check if qt-everywhere-src-{{ qt_version }}.tar.xz is downloaded
+      stat:
+        path: /opt/qt-everywhere-src-{{ qt_version }}.tar.xz
+      register: qt_src_details
 
-# this should reaslly probably be a handler 
-- name: Get QT 5.12 Repo
-  git: 
-    repo: https://code.qt.io/qt/qt5.git
-    dest: /tmp/qt-5.12/
-    version: 5.12
-  when: qt_git_details.stat.exists == false
+    - name: Download qt-{{ qt_version }}
+      get_url:
+        url: https://download.qt.io/archive/qt/{{ qt_major_version }}/{{ qt_version }}/single/qt-everywhere-src-{{ qt_version }}.tar.xz
+        dest: /opt/qt-everywhere-src-{{ qt_version }}.tar.xz
+      when: qt_src_details.stat.exists == false
 
-- name: Clear Git folder for clean build
-  shell: git clean -dfx
-  args:
-    chdir: /tmp/qt-5.12
-  register: qt_details.stat.exists == false 
+    - name: Check if qt-everywhere-src-{{ qt_version }}.tar.xz is extracted
+      stat:
+        path: /opt/qt-everywhere-src-{{ qt_version }}
+      register: qt_src_extracted_details
 
-- name: configure qt 5.12
-  shell: /tmp/qt-5.12/configure -prefix /opt/qt-5.12 -release -opensource -confirm-license -platform linux-g++-64 -nomake tests -nomake examples -opengl desktop -xcb -plugin-sql-mysql -plugin-sql-psql -openssl-linked -system-proxies -D QT_SHAREDMEMORY -D QT_SYSTEMSEMAPHORE -no-icu 
-  args:
-    chdir: /tmp/qt-5.12
-  when: qt_details.stat.exists == false 
+    - name: Extract qt-{{ qt_version }}
+      command:
+        chdir: /opt
+        cmd: tar Jxf qt-everywhere-src-{{ qt_version }}.tar.xz
+        warn: false
+      when: qt_src_extracted_details.stat.exists == false
 
-- name: build qt-5.12
-  shell: gmake -j64 > /tmp/qt-5.12.build.log
-  args:
-    chdir: /tmp/qt-5.12
-  when: qt_details.stat.exists == false
+    - name: install missing dependencies RedHat
+      yum:
+        name:
+          - gcc-toolset-9
+          - glib2-devel
+          - libxcb
+          - libxcb-devel
+          - xcb-util
+          - xcb-util-devel
+          - mesa-libGL-devel
+          - libxkbcommon-devel
+          - openssl-devel
+          - postgresql-devel
+        state: present
+      when: ansible_facts['os_family'] == "RedHat"
 
-- name: make install qt-5.12
-  shell: gmake install -j64 > /tmp/qt-5.12.install.log
-  args:
-     chdir: /tmp/qt-5.12
-  when: qt_details.stat.exists == false
+    - name: install qt5 dependencies RedHat
+      command:
+        cmd: yum-builddep qt5-devel
+      when: ansible_facts['os_family'] == "RedHat"
+
+# this next step fails, might have install source repos for ubuntu, e.g.
+# sudo cp /etc/apt/sources.list /etc/apt/sources.list~
+# sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+# sudo apt-get update
+
+    - name: install qt5 build-dep dependencies Ubuntu
+      apt:
+        pkg: qt5-default
+        state: build-dep
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: install qt5 dependencies Ubuntu
+      apt:
+        pkg:
+        - libxcb-xinerama0-dev
+        - python
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: configure qt {{ qt_version }}
+      shell:
+        chdir: /opt/qt-everywhere-src-{{ qt_version }}
+        cmd: ./configure -prefix /opt/qt-{{ qt_version }} -release -opensource -confirm-license -platform linux-g++-64 -nomake tests -nomake examples -opengl desktop -fontconfig -system-freetype -xcb -plugin-sql-mysql -plugin-sql-psql -openssl-linked -system-proxies -D QT_SHAREDMEMORY -D QT_SYSTEMSEMAPHORE -no-icu > last_configure.stdout 2> last_configure.stderr
+
+    - name: build qt-{{ qt_version }}
+      shell: make -j{{ cores_for_parallel_compile }} > /opt/qt-everywhere-src-{{ qt_version }}/build.stdout 2>> /opt/qt-everywhere-src-{{ qt_version }}/build.stderr
+      args:
+        chdir: /opt/qt-everywhere-src-{{ qt_version }}
+
+    - name: make install qt-{{ qt_version }}
+      shell: make install -j{{ cores_for_parallel_compile }} > /opt/qt-everywhere-src-{{ qt_version }}/install.stdout 2> /opt/qt-everywhere-src-{{ qt_version }}/install.stderr
+      args:
+        chdir: /opt/qt-everywhere-src-{{ qt_version }}
+
+  when: qt_installed_details.stat.exists == false
+   

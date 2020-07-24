@@ -23,6 +23,8 @@
         - config-lims-php
         - config-lims-lims
         - config-lims-slurm
+#        - build-qt
+#        - build-qwt
 
   become: yes
   vars:
@@ -42,6 +44,11 @@
         - ipaddr_int: "192.168.5.30"
         
         - self_signed: 'yes' # change to 'no' to use certbot 
+
+        - qt_major_version: "5.14"
+        - qt_version: "5.14.2"
+        - qwt_version: "6.1.5"
+        - cores_for_parallel_compile: 4
 
         # Doesn't matter if self-signed is enabled but here as an example for some certbot uses
         - certbot_create_if_missing: true
