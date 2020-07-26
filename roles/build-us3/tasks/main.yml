@@ -6,14 +6,30 @@
   register: us_installed_details
 
 - name: Install, configure and compile us3
+  become: no
   block:
-    - name: git clone ultrascan3 repository
+
+    - name: Temporarily change /opt to allow the remote user to create a directory
+      file:
+        path: /opt
+        mode: '0777'
+      become: yes
+      become_user: root
+      
+    - name: Git clone ultrascan3 repository
       git:
        repo: https://github.com/ehb54/ultrascan3.git
        version: "{{ us3_branch }}"
        dest: "/opt/ultrascan3"
     
-    - name: copy over local.pri
+    - name: Revert /opt to standard ownership
+      file:
+        path: /opt
+        mode: '0755'
+      become: yes
+      become_user: root
+
+    - name: Copy over local.pri
       template: 
            src: local.pri.j2
            dest: /opt/ultrascan3/local.pri
@@ -43,6 +59,7 @@
   register: us_somo_installed_details
 
 - name: Install, configure and compile us_somo
+  become: no
   block:
 
     - name: Clean up build_somo.stdout, .stderr
