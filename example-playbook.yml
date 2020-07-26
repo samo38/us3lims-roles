@@ -26,6 +26,7 @@
 #        - build-qt
 #        - build-qwt
 #        - build-us3
+#        - install-vncserver
 
   become: yes
   vars:
