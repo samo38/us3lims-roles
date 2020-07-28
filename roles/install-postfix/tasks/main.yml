@@ -61,6 +61,12 @@
     - /etc/postfix/sasl/sasl_passwd.db
     - /etc/postfix/sasl/sasl_passwd
 
+- name: Stop postfix
+  service:
+    name : postfix
+    enabled: yes
+    state: stopped
+
 - name: Configure postfix
   command:
     cmd: postconf -e {{ item }}
@@ -73,6 +79,10 @@
     - smtp_sasl_auth_enable=yes
     - smtp_sasl_security_options=
     - smtp_tls_security_level=may
+    - myhostname={{ postfix_hostname }}
+    - mydomain={{ postfix_hostname }}
+    - myorigin={{ postfix_hostname }}
+    - mydestination=
     
 - name: Set postfix permissions
   command:

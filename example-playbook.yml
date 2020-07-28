@@ -63,6 +63,9 @@
         # set this to a specific value (could be numeric ip) instead of {{ ansible_fqdn }} if you with, e.g. if the host is private
         # N.B. you can only configure one host per ansible-playbook run if you do not use {{ ansible_fqdn }}
         - hostname: "{{ ansible_fqdn }}"
+        - postfix_hostname: "{{ hostname }}"
+        # N.B. if your host name is pure ip (e.g. 1.2.3.4 etc), you need to configure a text string prefix as commented below
+        # - postfix_hostname: "us-{{ hostname }}"
 
         # Doesn't matter if self-signed is enabled but here as an example for some certbot uses
         - certbot_create_if_missing: true
