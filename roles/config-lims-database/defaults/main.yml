@@ -9,7 +9,7 @@ gbl_db_user: "gfac"
 
 lims3_db_user: "lims3_admin"
 
-server_name: "{{ ansible_fqdn }}"
+server_name: "{{ hostname }}"
 
 sql_ssl_ca: "/etc/my.cnf.d/ssl/ca-cert.pem"
 sql_ssl_cert: "/etc/my.cnf.d/ssl/server-cert.pem"

@@ -45,26 +45,14 @@
     path: ~ehb/bin
     state: directory
 
-- name: "Copy e to ~ehb/bin"
+- name: "Copy items to ~ehb/bin"
   copy:
-    src: files/e
-    dest: ~ehb/bin/e
+    src: 'files/{{ item }}'
+    dest: "~ehb/bin/{{ item }}"
     owner: root
     group: root
     mode: u=rwx,g=rx,o=rx
-
-- name: "Copy s to ~ehb/bin"
-  copy:
-    src: files/s
-    dest: ~ehb/bin/s
-    owner: root
-    group: root
-    mode: u=rwx,g=rx,o=rx
-
-- name: "Copy lth to ~ehb/bin"
-  copy:
-    src: files/lth
-    dest: ~ehb/bin/lth
-    owner: root
-    group: root
-    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - e
+    - s
+    - lth

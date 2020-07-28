@@ -27,10 +27,12 @@
 #        - build-qwt
 #        - build-us3
 #        - install-vncserver
+#        - install-postfix
 
   become: yes
   vars:
         # Required variables to define:
+        # N.B. once you set these, you can't change them simply by rerunning ansible-playbook for the same remote host!
         - us3_db_pass: "foobar-demo"
         - root_db_pass: "foobar-super"
         - admins_db_pass: "foobar-admin"
@@ -53,13 +55,22 @@
         - cores_for_parallel_compile: 4
         - us3_branch: "master"
 
+        - postfix_relay_smtp_host: smtp.gmail.com
+        - postfix_relay_smtp_port: 587
+        - postfix_relay_smtp_user: us.etc.tests@gmail.com
+        - postfix_relay_smtp_password: put_app_password_here
+
+        # set this to a specific value (could be numeric ip) instead of {{ ansible_fqdn }} if you with, e.g. if the host is private
+        # N.B. you can only configure one host per ansible-playbook run if you do not use {{ ansible_fqdn }}
+        - hostname: "{{ ansible_fqdn }}"
+
         # Doesn't matter if self-signed is enabled but here as an example for some certbot uses
         - certbot_create_if_missing: true
         - certbot_admin_email: "{{ admin_email }}" 
         - certbot_create_standalone_stop_services: [httpd] # centos/RHEL 
         - certbot_certs: 
             - domains: 
-                  - "{{ ansible_fqdn }}" 
+                  - "{{ hostname }}" 
 
         - certbot_auto_renew: true 
         - certbot_auto_renew_hour: "1" 
@@ -68,6 +79,7 @@
 
         - slurm_ver: 20.02.3 # Change to appropriate version 
         - slurm_md5: c71a300d6c5d33ef8ca60e52a203bb1e
+        - slurm_cores : 2
 
         # Overrride variables that are default
         - lims_admin: "John Smith"
