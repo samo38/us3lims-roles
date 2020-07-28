@@ -115,3 +115,19 @@
         path: /tmp/new_people_inject.sql
         state: absent
   when: root_pwd_check.rc == 0
+
+# global
+- name: Copy over the global file
+  copy:
+        src: global-db.sql
+        dest: /tmp
+  when: root_pwd_check.rc == 0
+
+- name: Inject global-db file into uslims3_global
+  mysql_db:
+        login_user: root
+        login_password: "{{ root_db_pass }}"
+        name: uslims3_global
+        state: import
+        target: /tmp/global-db.sql
+  when: root_pwd_check.rc == 0
