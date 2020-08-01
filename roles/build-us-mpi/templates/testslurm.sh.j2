@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+
+# **** test slurm
+
+set -e
+
+. /etc/profile
+
+cd {{ mpi_test_path }}/slurm
+
+cat > test.slurm <<EOF
+#!/bin/bash
+#SBATCH -p batch
+#SBATCH -J test_job
+#SBATCH -N 1
+#SBATCH -n 8
+#SBATCH -t 00:01:00
+#SBATCH -e {{ mpi_test_path }}/slurm/stderr
+#SBATCH -o {{ mpi_test_path }}/slurm/stdout
+
+module load mpi
+cd {{ mpi_test_path }}/slurm
+
+mpirun {{ mpi_test_path }}/mpi/hellompi
+EOF
+
+sbatch test.slurm
