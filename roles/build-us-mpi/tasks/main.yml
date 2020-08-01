@@ -1,0 +1,104 @@
+---
+# tasks file for build-us-mpi
+
+- name: Install environment-modules, gcc-toolset-9 and mpich RedHat
+  yum:
+    name:
+      - environment-modules
+      - gcc-toolset-9
+      - mpich
+      - mpich-devel
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Install environment-modules and mpich Debian
+  yum:
+    name:
+      - environment-modules
+      - mpich
+  when: ansible_facts['os_family'] == "Debian"
+  
+- name: Link /etc/modulefiles to /usr/share/modules/modulefiles for Debian
+  file: 
+    src: /usr/share/modules/modulefiles
+    dest: /etc/modulefiles
+    state: link
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Create us-mpi modulefiles directory
+  file: 
+    path: /etc/modulefiles/ultrascan/
+    mode: '0755'
+    state: directory
+
+- name: Copy over template files for us-mpi modulefiles
+  template: 
+    src: mpi.j2
+    dest: /etc/modulefiles/ultrascan/mpi
+    mode: '0644'
+
+- name: Check if us-mpi already installed, using {{ us3_cluster_path }}/bin/us_mpi_analysis as a proxy
+  stat: 
+    path: "{{ us3_cluster_path }}/bin/us_mpi_analysis"
+  register: us_mpi_installed_details
+
+- name: Install, configure and compile us_mpi_analysis
+  become: yes
+  become_user: us3
+  block:
+    - name: Git clone ultrascan3 repository
+      git:
+       repo: https://github.com/ehb54/ultrascan3.git
+       version: "{{ us3_branch }}"
+       dest: "{{ us3_nodb_path }}"
+
+    - name: Create {{ us3_cluster_path }} directories
+      file: 
+        path: "{{ us3_cluster_path }}/{{ item }}"
+        owner: us3
+        mode: '0755'
+        state: directory
+      with_items:
+        - 
+        - bin
+        - lib
+
+    - name: Copy over template files for building us-mpi
+      template: 
+        src: "{{ item.name }}.j2"
+        dest: "{{ us3_nodb_path }}/{{ item.name }}"
+        mode: "{{ item.mode }}"
+      with_items:
+        - { name: local.pri, mode: '0644' }
+        - { name: make-uma, mode: '0755' }
+
+    - name: Clean up build.stdout, .stderr
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ us3_nodb_path }}/build.stdout"
+        - "{{ us3_nodb_path }}/build.stderr"
+
+    - name: make us_mpi_analysis
+      shell:
+        chdir: "{{ us3_nodb_path }}"
+        cmd: ./make-uma {{ item }} >> build.stdout 2>> build.stderr
+      with_items:
+        - update
+        - build
+        - install
+
+#      environment: 
+#        PATH: /opt/qt-{{ qt_version }}/bin/:/usr/bin:/usr/local/bin:/bin
+#        QTDIR: /opt/qt-{{ qt_version }}
+#        QWTDIR: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+#        US3DIR: /opt/ultrascan3
+#        QTBIN: /opt/qt-{{ qt_version }}/bin
+#        QTLIB: /opt/qt-{{ qt_version }}/lib
+#        QTINC: /opt/qt-{{ qt_version }}/include
+#        US3BIN: /opt/ultrascan3/bin
+#        US3LIB: /opt/ultrascan3/lib
+#        us3 : /opt/ultrascan3
+#        LD_LIBRARY: ${US3LIB}:${QTLIB}:${QWTLIB}:${OLPATH}:${USDIR}
+
+  when: us_mpi_installed_details.stat.exists == false

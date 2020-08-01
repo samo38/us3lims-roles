@@ -3,31 +3,41 @@
   remote_user: usadmin
 
   pre_tasks:
-       - name: disable selinux
-         selinux:
-            state: disabled
-       - name: update system
-         yum: name=* state=latest
-         when: ansible_facts['os_family'] == "RedHat"
-       - name: install EPEL repo
-         yum: name=epel-release state=present
-         when: ansible_facts['os_family'] == "RedHat"
+  - name: set www_user for Debian
+    set_fact:
+      www_user: "www-data"
+    when: ansible_os_family == "Debian"
+
+  - name:  set www_user for RedHat
+    set_fact:
+      www_user: "apache"
+    when: ansible_os_family == "RedHat"
+  - name: disable selinux
+    selinux:
+       state: disabled
+  - name: update system
+    yum: name=* state=latest
+    when: ansible_facts['os_family'] == "RedHat"
+  - name: install EPEL repo
+    yum: name=epel-release state=present
+    when: ansible_facts['os_family'] == "RedHat"
 
   roles:
-        - config-lims-admin
-        - config-lims-firewall
-        - config-lims-repo
-        - config-lims-us3-user
-        - config-lims-database
-        - config-lims-apache
-        - config-lims-php
-        - config-lims-lims
-        - config-lims-slurm
-#        - build-qt
-#        - build-qwt
-#        - build-us3
-#        - install-vncserver
-#        - install-postfix
+      - config-lims-admin
+      - config-lims-firewall
+      - config-lims-repo
+      - config-lims-us3-user
+      - config-lims-database
+      - config-lims-apache
+      - config-lims-php
+      - config-lims-lims
+      - config-lims-slurm
+#      - build-qt
+#      - build-qwt
+#      - build-us3
+#      - build-us-mpi
+#      - install-vncserver
+#      - install-postfix
 
   become: yes
   vars:

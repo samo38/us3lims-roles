@@ -43,7 +43,7 @@
         chdir: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
         cmd: /opt/qt-{{ qt_version }}/bin/qmake qwt.pro
 
-    - name: compile qwt
+    - name: Compile qwt
       shell:
         chdir: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
         cmd: make -j {{ cores_for_parallel_compile }} > build.stdout 2> build.stderr

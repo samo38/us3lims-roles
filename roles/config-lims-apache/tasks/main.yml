@@ -18,7 +18,7 @@
   file:
         path: "{{ www_base }}"
         owner: us3
-        group: apache
+        group: "{{ www_user }}"
         state: directory
 
 - include_role:

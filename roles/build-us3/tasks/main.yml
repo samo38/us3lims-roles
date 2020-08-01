@@ -5,6 +5,37 @@
     path: /opt/ultrascan3/bin/us
   register: us_installed_details
 
+- name: Install environment-modules RedHat
+  yum:
+    name:
+      - environment-modules
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Install environment-modules Debian
+  yum:
+    name:
+      - environment-modules
+  when: ansible_facts['os_family'] == "Debian"
+  
+- name: Link /etc/modulefiles to /usr/share/modules/modulefiles for Debian
+  file: 
+    src: /usr/share/modules/modulefiles
+    dest: /etc/modulefiles
+    state: link
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Create us-gui modulefiles directory
+  file: 
+    path: /etc/modulefiles/ultrascan/
+    mode: '0755'
+    state: directory
+
+- name: Copy over template files for us-gui modulefiles
+  template: 
+    src: gui.j2
+    dest: /etc/modulefiles/ultrascan/gui
+    mode: '0644'
+
 - name: Install, configure and compile us3
   become: no
   block:
