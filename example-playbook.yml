@@ -92,7 +92,14 @@
 
         - slurm_ver: 20.02.3 # Change to appropriate version 
         - slurm_md5: c71a300d6c5d33ef8ca60e52a203bb1e
+
+        # N.B. slurm_cores can not exceed available cores, if it does, the node will be stuck "draining" (waiting for available resources)
+        #      if you want to develop (not production!) on a smaller system
+        #         add "#SBATCH -O" to your sbatch submission scripts to allow overcommitting
+        #         set - slurm_sbatch_extras : "#SBATCH -O\n" for slurm testing scripts via ansible
         - slurm_cores : 2
+        - slurm_sbatch_extras : ""
+        # - slurm_sbatch_extras : "#SBATCH -O\n"
 
         # Overrride variables that are default
         - lims_admin: "John Smith"

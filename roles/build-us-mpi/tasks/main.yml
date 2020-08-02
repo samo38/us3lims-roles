@@ -107,6 +107,15 @@
   become: yes
   become_user: us3
   block:
+  - name: Empty {{ mpi_test_path }} directories
+    file: 
+      path: "{{ mpi_test_path }}/{{ item }}"
+      state: absent
+    with_items:
+      - mpi
+      - slurm
+      - analysis
+
   - name: Create {{ mpi_test_path }} directories
     file: 
       path: "{{ mpi_test_path }}/{{ item }}"
@@ -127,15 +136,24 @@
     with_items:
       - { name: testmpi.sh, subdir: mpi }
       - { name: testslurm.sh, subdir: slurm }
+      - { name: testanalysis.sh, subdir: analysis }
 
-  - name: Run mpi tests tests
+  - name: Copy over non-templace files for mpi tests
+    copy: 
+      src: "{{ item.name }}"
+      dest: "{{ mpi_test_path }}/{{ item.subdir }}/{{ item.name }}"
+      mode: '0644'
+    with_items:
+      - { name: hpcinput-localhost-uslims3_test-00001.tar.xz, subdir: analysis }
+
+  - name: Run mpi tests
     shell:
       chdir: "{{ mpi_test_path }}/{{ item.subdir }}"
       cmd: "{{ item.cmd }} > test.stdout 2> test.stderr"
     with_items:
       - { subdir: mpi, cmd: ./testmpi.sh }
       - { subdir: slurm, cmd: ./testslurm.sh }
-
+      - { subdir: analysis, cmd: ./testanalysis.sh }
 
   - name: Get stderr status from mpi test
     stat:
@@ -148,21 +166,30 @@
     
   - name: Get stderr status from slurm test
     stat:
-      path: "{{ mpi_test_path }}/slurm/test.stderr"
+      path: "{{ mpi_test_path }}/slurm/stderr"
     register: stat_slurm
 
   - fail: 
       msg: slurm Test failed
     when: stat_slurm.stat.isreg is not defined or stat_slurm.stat.size > 0
     
-#  - name: Get stderr status from analysis test
-#    stat:
-#      path: "{{ mpi_test_path }}/analysis/test.stderr"
-#    register: stat_analysis
+  - name: Get stderr status from analysis test
+    stat:
+      path: "{{ mpi_test_path }}/analysis/test.stderr"
+    register: stat_analysis
 
-#  - fail:
-#      msg: analysis Test failed
-#    when: stat_analysis.stat.isreg is not defined or stat_analysis.stat.size > 0
-    
+  - fail:
+      msg: analysis Test failed
+    when: stat_analysis.stat.isreg is not defined or stat_analysis.stat.size > 0
+
+  - name: Get output status from analysis test
+    stat:
+      path: "{{ mpi_test_path }}/analysis/output/analysis-results.tar"
+    register: stat_analysis_output
+
+  - fail:
+      msg: Test failed - us mpi analysis did not produce expected analysis_results
+    when: stat_analysis_output.stat.isreg is not defined or stat_analysis_output.stat.size == 0
+
 
 
