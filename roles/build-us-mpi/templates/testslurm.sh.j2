@@ -32,8 +32,6 @@ cd {{ mpi_test_path }}/slurm
 mpirun {{ mpi_test_path }}/mpi/hellompi
 EOF
 
-sbatch test.slurm
-
 timeout 120 sbatch test.slurm
 
 # test if the expected output files exist

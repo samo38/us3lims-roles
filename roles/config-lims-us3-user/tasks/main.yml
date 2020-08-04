@@ -66,10 +66,14 @@
    version: "{{ branch }}"
    dest: "/home/us3/lims/database/sql"
 
+- set_fact:
+    gridctl_branch: "{{ branch }}"
+  when: gridctl_branch is undefined
+    
 - name: git clone gridctl repository to bin
   git:
    repo: https://github.com/ehb54/us3lims_gridctl.git
-   version: "{{ branch }}"
+   version: "{{ gridctl_branch }}"
    dest: "/home/us3/lims/bin"
 
 - name: Change permissions in gridctl
@@ -118,5 +122,8 @@
 - name: Start us3-listen service
   service:
     name: us3-listen
-    state: started
+    enabled: yes
+    state: restarted
   changed_when: false
+
+

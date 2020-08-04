@@ -10,6 +10,6 @@ conflict ultrascan
 setenv        US_MPI        {{ us3_cluster_path }}
 setenv        US_NODB       {{ us3_nodb_path }}
 prepend-path  PATH          {{ us3_cluster_path }}/bin
-prepend-path  LD_LIBRARY_PATH {{ us3_cluster_path }}/lib
+prepend-path  LD_LIBRARY_PATH {{ us3_cluster_path }}/lib:/opt/qt-{{ qt_version }}/lib
 
 

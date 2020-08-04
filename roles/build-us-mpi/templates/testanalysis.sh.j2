@@ -40,8 +40,6 @@ cd {{ mpi_test_path }}/analysis
 mpirun us_mpi_analysis -walltime 2880 -mgroupcount 1 hpcinput-localhost-uslims3_test-00001.tar
 EOF
 
-sbatch test.slurm
-
 # we are giving it three minutes to complete
 timeout 180 sbatch test.slurm
 
