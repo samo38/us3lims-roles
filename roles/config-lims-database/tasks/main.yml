@@ -56,9 +56,10 @@
     dest: /etc/my.cnf
     backup: yes
 
-- name: start MariaDB
+- name: start & enable MariaDB
   service:
        name: mariadb
+       enabled: yes
        state: started
 
 - name: check if root_pw_set

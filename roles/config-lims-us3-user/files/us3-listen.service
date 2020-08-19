@@ -13,3 +13,6 @@ ExecReload=php /home/us3/lims/bin/services.php restart
 ExecStop=php /home/us3/lims/bin/services.php stop
 
 RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
