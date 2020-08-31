@@ -24,12 +24,16 @@
       group: "{{ www_user }}"
       mode: "0640"
 
+- set_fact:
+    common_branch: "{{ branch }}"
+  when: common_branch is undefined
+
 # Common dir.
 - name: Clone commons repo
   git:
    repo: "{{ common_url }}"
    dest: "{{ www_common }}"
-   version: "{{ branch }}"
+   version: "{{ common_branch }}"
    force: yes
   changed_when: false
 
@@ -57,11 +61,15 @@
     dest: "{{ www_uslims }}/config.php"
     backup: yes
 
+- set_fact:
+    newinst_branch: "{{ branch }}"
+  when: newinst_branch is undefined
+
 # Newlims dir.
 - name: Clone newinst repo
   git:
     repo: "{{ newinst_url }}"
-    version: "{{ branch }}"
+    version: "{{ newinst_branch }}"
     dest: "{{ www_newlims }}"
 
 - name: Template newinst config
