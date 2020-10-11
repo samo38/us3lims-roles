@@ -18,6 +18,7 @@
                 - make
                 - gcc
                 - mariadb-devel
+                - python3
         state: present
         update_cache: yes
 

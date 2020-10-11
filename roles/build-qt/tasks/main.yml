@@ -30,6 +30,12 @@
         warn: false
       when: qt_src_extracted_details.stat.exists == false
 
+    - name: Install yum-builddep for RedHat
+      yum:
+        name:
+          - yum-utils
+      when: ansible_facts['os_family'] == "RedHat"
+
     - name: Install missing dependencies RedHat
       yum:
         name:
@@ -45,7 +51,13 @@
           - openssl-devel
           - postgresql-devel
           - subversion
+          - python3
         state: present
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Set python alternative for RedHat
+      command:
+        cmd: alternatives --set python /usr/bin/python3
       when: ansible_facts['os_family'] == "RedHat"
 
     - name: Install qt5 dependencies RedHat

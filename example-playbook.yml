@@ -68,6 +68,9 @@
         - qwt_version: "6.1.5"
         - cores_for_parallel_compile: 4
         - us3_branch: "master"
+        - gridctl_branch: "ehb-dev"
+        - common_branch: "ehb-dev"
+        - newinst_branch: "ehb-dev"
 
         - postfix_relay_smtp_host: smtp.gmail.com
         - postfix_relay_smtp_port: 587
