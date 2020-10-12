@@ -1,0 +1,50 @@
+- name: Set www_user
+  set_fact:
+     www_user: "www-data"
+     apache_dir: "/etc/apache2"
+
+- name: Install packages
+  apt:
+   name:
+     - apache2
+   update_cache: true
+
+
+- name: configure base apache2 config from template
+  template:
+        src: apache2.conf.j2
+        dest: "{{ apache_dir }}/apache2.conf"
+        backup: yes
+
+- name: Enable service apache2, and not touch the state
+  service:
+        name: apache2
+        enabled: yes
+
+- name: Configure virtual host for redirect
+  template:
+        src: http-server.conf.j2
+        dest: "{{ apache_dir }}/sites-available/http-{{ server_name }}.conf"
+        backup: yes
+  notify:
+        - restart apache2
+
+- name: configure Virtual host for ssl
+  template:
+        src: https-server.conf.j2
+        dest: "{{ apache_dir }}/sites-available/https-{{ server_name }}.conf"
+        backup: yes
+  notify:
+        - restart apache2
+
+- name: Create symlink for redirect
+  file:
+    src: "{{ apache_dir }}/sites-available/http-{{ server_name }}.conf"
+    dest: "{{ apache_dir }}/sites-enabled/http-{{ server_name }}"
+    state: link
+
+- name: Create symlink for redirect
+  file:
+    src: "{{ apache_dir }}/sites-available/https-{{ server_name }}.conf"
+    dest: "{{ apache_dir }}/sites-enabled/https-{{ server_name }}"
+    state: link

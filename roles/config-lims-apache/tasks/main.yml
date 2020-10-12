@@ -1,18 +1,20 @@
-- name: install apache
-  dnf:
-    name:
-      - httpd
-      - mod_ssl
-    update_cache: yes
+#- name: install apache
+#  package:
+#    name:
+#      - httpd
+#      - mod_ssl
+        #update_cache: yes
 
-- name: Enable service httpd, and not touch the state
-  service:
-        name: httpd
-        enabled: yes
-- name: Start service httpd, if not started
-  service:
-        name: httpd
-        state: started
+- name: Use Rhel tasks
+  include: redhat-tasks.yml
+  when: " ansible_distribution  == 'Redhat' or ansible_distribution == 'CentOS'"
+
+  #- name: debug
+  #debug: msg="{{ ansible_distribution_version }}"
+
+- name: Use Debian tasks
+  include: debian-tasks.yml
+  when: " ansible_distribution  == 'Debian'"
 
 - name: Ensure www path exists
   file:
@@ -49,25 +51,3 @@
         privatekey_path: "{{ ssl_self_key_path }}"
         csr_path: "{{ ssl_self_csr_path }}"
   when: self_signed == 'yes'
-
-- name: Configure base apache2 config from template
-  template:
-        src: httpd.conf.j2
-        dest: /etc/httpd/conf/httpd.conf
-        backup: yes
-
-- name: Configure virtual host for redirect
-  template:
-        src: http-server.conf.j2
-        dest: "/etc/httpd/conf.d/http-{{ server_name }}.conf"
-        backup: yes
-  notify:
-        - restart apache
-
-- name: configure Virtual host for ssl
-  template:
-        src: https-server.conf.j2
-        dest: "/etc/httpd/conf.d/https-{{ server_name }}.conf"
-        backup: yes
-  notify:
-        - restart apache

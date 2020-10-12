@@ -4,16 +4,14 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: instance-centos8
-    image: geerlingguy/docker-${MOLECULE_DISTRO:-centos8}-ansible
+  - name: instance-deb10
+    image: geerlingguy/docker-${MOLECULE_DISTRO:-debian10}-ansible
     command: ""
     tempfs:
       - /run
       - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: true
-    pre_build_image: true
 provisioner:
   name: ansible
 verifier:

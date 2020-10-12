@@ -1,0 +1,46 @@
+- name: Set www_user
+  set_fact:
+     www_user: "apache"
+
+- name: Set apache directory
+  set_fact:
+     apache_dir: "/etc/httpd"
+
+- name: Install packages
+  dnf:
+   name:
+    - httpd
+    - mod_ssl
+   update_cache: yes
+
+- name: configure base apache2 config from template
+  template:
+        src: httpd.conf.j2
+        dest: "{{ apache_dir }}/conf/httpd.conf"
+        backup: yes
+
+- name: Enable service httpd, and not touch the state
+  service:
+        name: httpd
+        enabled: yes
+
+- name: Start service httpd, if not started
+  service:
+        name: httpd
+        state: started
+
+- name: Configure virtual host for redirect
+  template:
+        src: http-server.conf.j2
+        dest: "{{ apache_dir }}/conf.d/http-{{ server_name }}.conf"
+        backup: yes
+  notify:
+        - restart httpd
+
+- name: configure Virtual host for ssl
+  template:
+        src: https-server.conf.j2
+        dest: "{{ apache_dir }}/conf.d/https-{{ server_name }}.conf"
+        backup: yes
+  notify:
+        - restart httpd
