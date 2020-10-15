@@ -87,6 +87,18 @@
   template:
     src: listen-config.php.j2
     dest: /home/us3/lims/bin/listen-config.php
+    
+- name: Set us3 ownership of us3/lims/bin
+  command:
+    chdir: "/home/us3/lims/bin"
+    cmd: chown -R us3:us3 .
+    warn: false
+
+- name: Set us3 ownership of us3/lims/database/sql
+  command:
+    chdir: "/home/us3/lims/database/sql"
+    cmd: chown -R us3:us3 .
+    warn: false
 
 - name: Create us3/etc
   file:
