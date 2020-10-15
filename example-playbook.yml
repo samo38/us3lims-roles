@@ -21,9 +21,20 @@
         yum: name=* state=latest
         when: ansible_facts['os_family'] == "RedHat"
 
-      - name: install EPEL repo
+      - name: install EPEL repo for CentOS
         yum: name=epel-release state=present
-        when: ansible_facts['os_family'] == "RedHat"
+        when: ansible_facts['distribution'] == "CentOS"
+
+      - name: enable codeready for RedHat
+        command:
+           cmd: subscription-manager repos --enable "codeready-builder-for-rhel-8-x86_64-rpms"
+        when: ansible_facts['distribution'] == "RedHat"
+
+      - name: install EPEL repo for RedHat
+        yum:
+           name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+           state: present
+        when: ansible_facts['distribution'] == "RedHat"
 
   roles:
       - config-lims-admin
