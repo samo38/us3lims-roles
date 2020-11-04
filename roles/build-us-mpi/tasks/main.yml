@@ -30,10 +30,16 @@
     mode: '0755'
     state: directory
 
-- name: Copy over template files for us-mpi modulefiles
+- name: Copy over template files for ultrascan/mpi modulefiles
   template: 
     src: mpi.j2
     dest: /etc/modulefiles/ultrascan/mpi
+    mode: '0644'
+
+- name: Copy over template files for ultrascan/mpi-build modulefiles
+  template: 
+    src: mpi-build.j2
+    dest: /etc/modulefiles/ultrascan/mpi-build
     mode: '0644'
 
 - name: Check if us-mpi already installed, using {{ us3_cluster_path }}/bin/us_mpi_analysis as a proxy
@@ -138,7 +144,7 @@
       - { name: testslurm.sh, subdir: slurm }
       - { name: testanalysis.sh, subdir: analysis }
 
-  - name: Copy over non-templace files for mpi tests
+  - name: Copy over non-template files for mpi tests
     copy: 
       src: "{{ item.name }}"
       dest: "{{ mpi_test_path }}/{{ item.subdir }}/{{ item.name }}"

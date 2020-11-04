@@ -30,10 +30,16 @@
     mode: '0755'
     state: directory
 
-- name: Copy over template files for us-gui modulefiles
+- name: Copy over template files for ultrascan/gui modulefiles
   template: 
     src: gui.j2
     dest: /etc/modulefiles/ultrascan/gui
+    mode: '0644'
+
+- name: Copy over template files for ultrascan/gui-build modulefiles
+  template: 
+    src: gui-build.j2
+    dest: /etc/modulefiles/ultrascan/gui-build
     mode: '0644'
 
 - name: Install, configure and compile us3
@@ -178,5 +184,14 @@
     cmd: make -j {{ cores_for_parallel_compile }} >> build_doc.stdout 2>> build_doc.stderr
   environment: 
     PATH: /opt/qt-{{ qt_version }}/bin/:/usr/bin:/usr/local/bin:/bin
+
+- name: Copy assistant to us3/bin
+  copy:
+    src: /opt/qt-{{ qt_version }}/bin/assistant
+    remote_src: yes
+    dest: /opt/ultrascan3/bin/assistant
+    owner: us3
+    group: us3
+    mode: preserve
 
 
