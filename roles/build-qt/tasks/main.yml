@@ -89,9 +89,15 @@
       blockinfile:
         path: /opt/qt-everywhere-src-{{ qt_version }}/qtbase/mkspecs/common/g++-base.conf
         block: |
-          QMAKE_CFLAGS            += -march=native
-          QMAKE_CXXFLAGS          += -march=native
+          QMAKE_CFLAGS            += -march=native -O3
+          QMAKE_CXXFLAGS          += -march=native -O3
 
+    - name: Replace O2 with O3 in relevant qt mkspecs
+      replace:
+        path: /opt/qt-everywhere-src-{{ qt_version }}/qtbase/mkspecs/common/gcc-base.conf
+        regexp: '-O2'
+        replace: '-O3'
+       
     - name: Remove shadow build directory for qt
       file:
         path: /opt/qt-everywhere-src-{{ qt_version }}/shadow-build
