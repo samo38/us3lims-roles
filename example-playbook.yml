@@ -40,6 +40,7 @@
       - config-lims-admin
       - config-lims-firewall
       - config-lims-repo
+      - config-lims-gui
       - config-lims-us3-user
       - config-lims-database
       - config-lims-apache

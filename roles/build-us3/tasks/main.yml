@@ -245,3 +245,9 @@
     group: us3
     mode: preserve
 
+- name: Symlink docs for somo
+  file:
+    src: "/opt/ultrascan3/us_somo/somo/doc"
+    dest: "/opt/ultrascan3/somo/doc"
+    state: link
+    
