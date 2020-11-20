@@ -28,6 +28,7 @@ cat > test.slurm <<EOF
 #SBATCH -W
 {{ slurm_sbatch_extras }}
 
+module purge
 module load mpi
 module load ultrascan/mpi
 

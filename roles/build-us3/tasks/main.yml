@@ -250,4 +250,11 @@
     src: "/opt/ultrascan3/us_somo/somo/doc"
     dest: "/opt/ultrascan3/somo/doc"
     state: link
-    
+
+- name: Copy us3.sh to /etc/profile.d
+  copy:
+    src: us3.sh
+    dest: /etc/profile.d/us3.sh
+    owner: root
+    group: root
+    mode: u=rwx,o=rx
