@@ -175,4 +175,32 @@
         cmd: gcc -v 2> /opt/qt-everywhere-src-{{ qt_version }}/install.gccversion && make install -j{{ cores_for_parallel_compile }} > /opt/qt-everywhere-src-{{ qt_version }}/install.stdout 2> /opt/qt-everywhere-src-{{ qt_version }}/install.stderr
       when: ansible_facts['os_family'] == "Debian"
 
+    - name: remove old symlink from /opt/qt to /opt/qt-{{ qt_version }} if it exists
+      file:
+        path: /opt/qt
+        state: absent
+      ignore_errors: true
+
+    - name: create symlink from /opt/qt to /opt/qt-{{ qt_version }}
+      file:
+        src: /opt/qt-{{ qt_version }}
+        dest: /opt/qt
+        owner: usadmin
+        group: usadmin
+        state: link
+
+    - name: remove old symlink from /opt/qt-{{ qt_version }}/fonts to /usr/share/fonts if it exists
+      file:
+        path: /opt/qt-{{ qt_version }}/lib/fonts
+        state: absent
+      ignore_errors: true
+
+    - name: create symlink from /usr/share/fonts to /opt/qt-{{ qt_version }}/lib/fonts
+      file: 
+        src: /usr/share/fonts
+        dest: /opt/qt-{{ qt_version }}/lib/fonts
+        owner: usadmin
+        group: usadmin
+        state: link
+
   when: qt_installed_details.stat.exists == false
