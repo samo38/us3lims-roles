@@ -5,7 +5,7 @@
 
 - name: install slurm dependencies
   dnf:
-        enablerepo: PowerTools
+        enablerepo: powertools
         name:
                 - globus-gram-job-manager-slurm
                 - munge-devel

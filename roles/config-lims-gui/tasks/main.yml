@@ -4,7 +4,11 @@
 - name: groupinstall workstation
   command: dnf groupinstall workstation
   when: install_workstation|default(false)
-  
+
+- name: groupinstall Server with GUI
+  command: dnf groupinstall "Server with GUI"
+  when: install_workstation|default(false)
+
 - name: Create a directory /etc/skel/.local/share/applications
   file:
     path: /etc/skel/.local/share/applications

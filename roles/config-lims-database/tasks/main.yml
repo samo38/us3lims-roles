@@ -15,7 +15,7 @@
     
 - name: Install mariadb & additionals
   dnf:
-    enablerepo: PowerTools
+    enablerepo: powertools
     name:
       - mariadb-server
       - mariadb
