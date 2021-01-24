@@ -40,10 +40,17 @@
         warn: false
       when: qwt_src_extracted_details.stat.exists == false
 
-    - name: Configure qwt
+    - name: Configure qwt for RedHat using gcc-9
+      shell:
+        chdir: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+        cmd: . /opt/rh/gcc-toolset-9/enable && /opt/qt-{{ qt_version }}/bin/qmake qwt.pro
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Configure qwt for Debian
       shell:
         chdir: /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
         cmd: /opt/qt-{{ qt_version }}/bin/qmake qwt.pro
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Compile qwt for RedHat using gcc-9
       shell:

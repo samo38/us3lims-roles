@@ -28,6 +28,10 @@
     common_branch: "{{ branch }}"
   when: common_branch is undefined
 
+- set_fact:
+    webinfo_branch: "{{ branch }}"
+  when: webinfo_branch is undefined
+
 # Common dir.
 - name: Clone commons repo
   git:
@@ -53,7 +57,7 @@
   git:
    repo: "{{ webinfo_url }}"
    dest: "{{ www_uslims }}"
-   version: "{{ branch }}"
+   version: "{{ webinfo_branch }}"
 
 - name: Template webinfo config
   template:

@@ -51,6 +51,7 @@
         name:
           - git
         update_cache: yes
+      become: yes
       when: ansible_facts['os_family'] == "RedHat"
 
     - name: install git dependency Debian
@@ -58,6 +59,7 @@
         name:
           - git
         state: present
+      become: yes
       when: ansible_facts['os_family'] == "Debian"
 
     - name: Temporarily change /opt to allow the remote user to create a directory
@@ -167,7 +169,17 @@
         src: somo.local.pri.j2
         dest: /opt/ultrascan3/us_somo/develop/local.pri
     
-    - name: Extra qmakes
+    - name: Extra qmakes for RedHat using gcc-9
+      shell:
+        chdir: /opt/ultrascan3/us_somo/develop/{{ item }}
+        cmd: . /opt/rh/gcc-toolset-9/enable && /opt/qt-{{ qt_version }}/bin/qmake {{ item }}.pro
+      with_items:
+        - us_admin
+        - us_saxs_cmds_t
+        - us3_hydrodyn
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Extra qmakes for Debian
       shell:
         chdir: /opt/ultrascan3/us_somo/develop/{{ item }}
         cmd: /opt/qt-{{ qt_version }}/bin/qmake {{ item }}.pro
@@ -175,6 +187,7 @@
         - us_admin
         - us_saxs_cmds_t
         - us3_hydrodyn
+      when: ansible_facts['os_family'] == "Debian"
 
     - name: Make somo for RedHat using gcc-9
       shell:

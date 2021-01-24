@@ -37,10 +37,10 @@
         when: ansible_facts['distribution'] == "RedHat"
 
   roles:
+      - config-lims-gui
       - config-lims-admin
       - config-lims-firewall
       - config-lims-repo
-      - config-lims-gui
       - config-lims-us3-user
       - config-lims-database
       - config-lims-apache
@@ -83,6 +83,7 @@
         - gridctl_branch: "ehb-dev"
         - common_branch: "ehb-dev"
         - newinst_branch: "ehb-dev"
+        - webinfo_branch: "ehb-dev"
 
         - postfix_relay_smtp_host: smtp.gmail.com
         - postfix_relay_smtp_port: 587
