@@ -54,9 +54,12 @@
       - install-vncserver
       - install-postfix
       - install-chrony
+      - install-google-fonts
+      - install-msttcore-fonts
 
   become: yes
   vars:
+        - install_commercial: true
         # Required variables to define:
         # N.B. once you set these, you can't change them simply by rerunning ansible-playbook for the same remote host!
         - us3_db_pass: "foobar-demo"
