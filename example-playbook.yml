@@ -56,10 +56,13 @@
       - install-chrony
       - install-google-fonts
       - install-msttcore-fonts
+      - install-reverse-tunnel
 
   become: yes
   vars:
+        - install_workstation: false
         - install_commercial: true
+
         # Required variables to define:
         # N.B. once you set these, you can't change them simply by rerunning ansible-playbook for the same remote host!
         - us3_db_pass: "foobar-demo"
@@ -67,7 +70,6 @@
         - admins_db_pass: "foobar-admin"
         - gbl_db_pass: "foobar-global"
         - us3php_db_pass: "foobar-php"
-        
         - limsadmin_db_pass: "foobar-iam-admin" 
 
         - admin_email: "example@email.org"
@@ -92,6 +94,13 @@
         - postfix_relay_smtp_port: 587
         - postfix_relay_smtp_user: us.etc.tests@gmail.com
         - postfix_relay_smtp_password: put_app_password_here
+
+        # required if install-reverse-tunnel role run
+        # you will manually need to install usadmin's public key on the rtunnel_user @ rtunnel_ip's authorized keys
+        - rtunnel_user: "ultrascan"
+        - rtunnel_ip: "142.66.17.9"
+        # assign unique port
+        - rtunnel_port: "220XX"
 
         # set this to a specific value (could be numeric ip) instead of {{ ansible_fqdn }} if you with, e.g. if the host is private
         # N.B. you can only configure one host per ansible-playbook run if you do not use {{ ansible_fqdn }}
