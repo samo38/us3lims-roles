@@ -59,7 +59,7 @@ for $l ( @vncusers ) {
 
 $userinfohdr =
     "vncport | vnc user name | linux user | vncdirectory | vncpasswd | vncconfig\n"
-    . '-'x75 . "\n"
+    . '-'x81 . "\n"
     ;
     
 sub userinfo {
@@ -68,6 +68,8 @@ sub userinfo {
     my ( $userhome ) = $userinfo[0] =~ /[^:]*:[^:]*:[^:]*:[^:]*:([^:]*):[^:]*$/;
     my $uservncd     = "$userhome/.vnc";
     my $uservncc     = "$uservncd/config";
+    my $uservncccat  = `cat $uservncc 2> /dev/null`;
+    my $uservnccstk  = $vncconfig eq $uservncccat;
     my $uservncpw    = "$uservncd/passwd";
     my $userexists   = scalar @userinfo;
     my $userstatus   = sprintf(
@@ -77,7 +79,7 @@ sub userinfo {
         , $userexists    ? "Exists" : "MISSING"
         , -e $uservncd   ? "Exists" : "MISSING"
         , -e $uservncpw  ? "Exists" : "MISSING"
-        , -e $uservncc   ? "Exists" : "MISSING"
+        , -e $uservncc   ? "Exists" . ( !$uservnccstk ? " - Custom" : "" ) : "MISSING"
         );
                           
     return ( $userstatus, $userexists, $userhome, $uservncd, $uservncc, $uservncpw );
