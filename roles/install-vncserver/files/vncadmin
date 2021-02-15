@@ -9,6 +9,7 @@ localhost
 alwaysshared
 ';
 
+$MIN_PORT = 2;
 $MAX_PORT = 2000;
 
 ### end user defines
@@ -132,7 +133,7 @@ if ( $arg eq 'add' ) {
     }
 
     $assignport = 0;
-    for ( $nextport = 1; $nextport <= $MAX_PORT; ++$nextport ) {
+    for ( $nextport = $MIN_PORT; $nextport <= $MAX_PORT; ++$nextport ) {
         if ( !$existingports{$nextport} ) {
             $assignport = $nextport;
             last;
