@@ -63,6 +63,11 @@
         - install_workstation: false
         - install_commercial: true
 
+        # uncomment one of the below for default allowed submissions
+        - submit_localonly: true
+        # - submit_remoteonly : true
+        # - submit_localandremote : true
+
         # Required variables to define:
         # N.B. once you set these, you can't change them simply by rerunning ansible-playbook for the same remote host!
         - us3_db_pass: "foobar-demo"
