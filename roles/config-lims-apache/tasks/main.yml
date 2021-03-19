@@ -21,6 +21,11 @@
         group: "{{ www_user }}"
         state: directory
 
+- name: Warning if certbot fails
+  ansible.builtin.debug:
+    msg: certbot will fail if firewall does not have ports 80,443 open
+  when: self_signed == 'no'
+
 - include_role:
          name: geerlingguy.certbot
   when: self_signed == 'no'

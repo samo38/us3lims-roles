@@ -9,7 +9,7 @@
 
 - name: Download and unzip google fonts
   ansible.builtin.unarchive:
-    src: https://github.com/google/fonts/archive/master.zip
+    src: https://github.com/google/fonts/archive/main.zip
     dest: /usr/share/fonts/google-fonts-full
     remote_src: yes
 
