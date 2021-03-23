@@ -32,6 +32,7 @@
   - debug: var=gitversions.stdout_lines
 
   roles:
+    - upgrade-environment-modules
 
   vars:
     us3_path:          "/home/us3"

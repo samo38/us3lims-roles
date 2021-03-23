@@ -36,11 +36,19 @@
     dest: /etc/modulefiles/ultrascan/mpi
     mode: '0644'
 
-- name: Copy over template files for ultrascan/mpi-build modulefiles
+- name: Copy over template files for ultrascan/mpi-build modulefiles for Debian
   template: 
     src: mpi-build.j2
     dest: /etc/modulefiles/ultrascan/mpi-build
     mode: '0644'
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Copy over template files for ultrascan/mpi-build modulefiles for RedHat
+  template: 
+    src: mpi-build-gcc-toolset-9.j2
+    dest: /etc/modulefiles/ultrascan/mpi-build
+    mode: '0644'
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: Check if us-mpi already installed, using {{ us3_cluster_path }}/bin/us_mpi_analysis as a proxy
   stat: 

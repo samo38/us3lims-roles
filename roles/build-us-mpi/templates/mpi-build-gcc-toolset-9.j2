@@ -19,3 +19,10 @@ prepend-path  PATH          {{ us3_cluster_path }}/bin:/opt/qt-{{ qt_version }}/
 prepend-path  LD_LIBRARY_PATH {{ us3_cluster_path }}/lib:/opt/qt-{{ qt_version }}/lib
 
 
+# gcc-toolset-9 addendum
+prepend-path    INFOPATH        /opt/rh/gcc-toolset-9/root/usr/share/info
+prepend-path    LD_LIBRARY_PATH /opt/rh/gcc-toolset-9/root/usr/lib64:/opt/rh/gcc-toolset-9/root/usr/lib:/opt/rh/gcc-toolset-9/root/usr/lib64/dyninst:/opt/rh/gcc-toolset-9/root/usr/lib/dyninst
+prepend-path    MANPATH /opt/rh/gcc-toolset-9/root/usr/share/man
+prepend-path    PATH    /opt/rh/gcc-toolset-9/root/usr/bin
+prepend-path    PKG_CONFIG_PATH /opt/rh/gcc-toolset-9/root/usr/lib64/pkgconfig
+setenv          PCP_DIR /opt/rh/gcc-toolset-9/root
