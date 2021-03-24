@@ -14,10 +14,12 @@
 #      - "{{ ansible_distribution_version }}"
 #      - "{{ ansible_distribution_major_version }}"
 
-  - shell: grep QTDIR /etc/modulefiles/ultrascan/gui-build | awk -F- '{ print $2 }'
+  - name: get qtinfo
+    shell: grep QTDIR /etc/modulefiles/ultrascan/gui-build | awk -F- '{ print $2 }'
     register: qtinfo
 
-  - shell: grep QWTDIR /etc/modulefiles/ultrascan/gui-build | awk -F- '{ print $3 }'
+  - name: get qwtinfo
+    shell: grep QWTDIR /etc/modulefiles/ultrascan/gui-build | awk -F- '{ print $4 }'
     register: qwtinfo
 
   - name: set facts

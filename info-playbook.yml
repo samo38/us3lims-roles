@@ -14,10 +14,12 @@
 #      - "{{ ansible_distribution_version }}"
 #      - "{{ ansible_distribution_major_version }}"
 
-  - shell: grep QTDIR /etc/modulefiles/ultrascan/gui-build | awk -F- '{ print $2 }'
+  - name: get qtinfo
+    shell: grep QTDIR /etc/modulefiles/ultrascan/gui-build | awk -F- '{ print $2 }'
     register: qtinfo
 
-  - shell: grep QWTDIR /etc/modulefiles/ultrascan/gui-build | awk -F- '{ print $4 }'
+  - name: get qwtinfo
+    shell: grep QWTDIR /etc/modulefiles/ultrascan/gui-build | awk -F- '{ print $4 }'
     register: qwtinfo
 
   - name: set facts
@@ -25,7 +27,7 @@
       qt_version:  "{{ qtinfo.stdout_lines[0] }}"
       qwt_version: "{{ qwtinfo.stdout_lines[0] }}"
       os_version:  "{{ ansible_distribution }} {{ ansible_distribution_version }}"
-  - debug: msg="os_version {{ os_version }}\nqt_version {{ qt_version }}\nqt_version {{ qwt_version }}"
+  - debug: msg="os_version {{ os_version }}\nqt_version {{ qt_version }}\nqwt_version {{ qwt_version }}"
 
   - name: "check git repos"
     shell: 'for j in {{ ultrascan_path }} /srv ~us3; { for i in `find $j -name "*.git" | sed s/.git$//`; { (printf "%-70s" "$i" && cd $i && RDATE=`git log -1 --shortstat .|grep Date:|sed -e "s/Date:   //"` && SHASH=`git log -1 --oneline .| cut -d" " -f1` && RNUMB=`git log --oneline | sed -n "/$SHASH/,99999p" | wc -l` && LCHNG=`git status -s | grep "^ M" | wc -l` && printf "%-30s  revision: %-6d tracked files with changes: %d\n" "$RDATE" $RNUMB $LCHNG ) }; }'
@@ -41,16 +43,6 @@
     shell: 'if [ -e {{ ultrascan_path }}/bin64/rasmol ] && [ -x {{ ultrascan_path }}/bin64/rasmol ] && [ 0 -eq `env LD_LIBRARY_PATH={{ ultrascan_path }}/lib ldd {{ ultrascan_path }}/bin64/rasmol | grep "not found" | wc -l` ]; then echo "ok"; else echo "failed"; fi'
     register: rasmolinfo
   - debug: var=rasmolinfo.stdout_lines
-
-  - name: "check rasmol 1"
-    ansible.builtin.debug:
-      msg: "rasmol line is failed"
-    when: rasmolinfo.stdout_lines[0] == "failed"
-
-  - name: "check rasmol 2"
-    ansible.builtin.debug:
-      msg: "rasmol line is ok"
-    when: rasmolinfo.stdout_lines[0] != "failed"
 
   roles:
 
