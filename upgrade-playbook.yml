@@ -58,8 +58,7 @@
     us3_cluster_path:  "{{ us3_path }}/cluster"
 
 # further upgrade thoughts
-# rasmol
 # us3
 # us3-mpi
 # qt, qwt (ugh)
-# rtunnel exists?
+
