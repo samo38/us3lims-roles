@@ -321,7 +321,7 @@
   register: rasmol_installed
 
 - name: Install rasmol
-  include-role:
+  include_role:
     name: install-rasmol
   when: rasmol_installed.stat.exists == false
 

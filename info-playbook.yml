@@ -35,7 +35,7 @@
     register: phpinfo
 
   - name: get mpi version
-    shell: if [ -e /etc/modulefiles/mpi/mpich-x86_64 ]; then cmd=`egrep 'prepend-path\s+PATH\s+' /etc/modulefiles/mpi/mpich-x86_64 | awk '{ print $3 }'` && $cmd/mpicc -v; else echo 'no /etc/modulefiles/mpi/x86_64 found'; fi
+    shell: if [ -e /etc/modulefiles/mpi/mpich-x86_64 ]; then cmd=`egrep 'prepend-path\s+PATH\s+' /etc/modulefiles/mpi/mpich-x86_64 | awk '{ print $3 }'` && $cmd/mpicc -v; else echo 'no /etc/modulefiles/mpi/mpich-x86_64 found'; fi
     register: mpiinfo
 
   - name: set facts
