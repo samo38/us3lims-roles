@@ -49,11 +49,34 @@
       mpi_version: "{{ mpiinfo.stdout_lines[0] }}"
   - debug: msg="os_version {{ os_version }}\nqt_version {{ qt_version }}\nqwt_version {{ qwt_version }}\nmysql_version {{ mysql_version }}\nopenssl_version {{ openssl_version }}\nphp_version {{ php_version }}\nmpi_version {{ mpi_version }}"
 
-  - name: "check git repos"
-    shell: 'for j in {{ ultrascan_path }} /srv ~us3; { for i in `find $j -name "*.git" | sed s/.git$//`; { (printf "%-70s" "$i" && cd $i && RDATE=`git log -1 --shortstat .|grep Date:|sed -e "s/Date:   //"` && SHASH=`git log -1 --oneline .| cut -d" " -f1` && RNUMB=`git log --oneline | sed -n "/$SHASH/,99999p" | wc -l` && LCHNG=`git status -s | grep "^ M" | wc -l` && printf "%-30s  revision: %-6d tracked files with changes: %d\n" "$RDATE" $RNUMB $LCHNG ) }; }'
-    register: gitversions
-  - debug: var=gitversions.stdout_lines
+#  - name: "check git repos"
+#    shell: 'for j in {{ ultrascan_path }} /srv ~us3; { for i in `find $j -name "*.git" | sed s/.git$//`; { (printf "%-70s" "$i" && cd $i && RDATE=`git log -1 --shortstat .|grep Date:|sed -e "s/Date:   //"` && SHASH=`git log -1 --oneline .| cut -d" " -f1` && RNUMB=`git log --oneline | sed -n "/$SHASH/,99999p" | wc -l` && LCHNG=`git status -s | grep "^ M" | wc -l` && printf "%-30s  revision: %-6d tracked files with changes: %d\n" "$RDATE" $RNUMB $LCHNG ) }; }'
+#    register: gitversions
+#  - debug: var=gitversions.stdout_lines
 
+  - name: create temporary directory for dbutils clone
+    ansible.builtin.tempfile:
+      state: directory
+      suffix: build
+    register: tempdir
+
+  - name: clone us3lims_dbutils into temp dir
+    ansible.builtin.git:
+      repo: https://github.com/ehb54/us3lims_dbutils
+      version: "main"
+      dest: "{{ tempdir.path }}"
+      depth: 1
+
+  - name: run us3lims_git_info.php
+    shell: 'cd {{ tempdir.path }} && php uslims_git_info.php --quiet'
+    register: gitinfo
+  - debug: var=gitinfo.stdout_lines
+
+  - name: remove temporary directory  {{ tempdir.path }}
+    file:
+      path: "{{ tempdir.path }}"
+      state: absent
+      
   - name: "check rtunnel"
     shell: 'RTBIN=`ls -l /sbin/rtunnel`; RTRCL=`grep rtunnel /etc/rc.local | egrep -v "^\s*#"`; printf "rtunnel:\n%s\nrc.local:\n%s\n" "$RTBIN" "$RTRCL"'
     register: rtunnelinfo
