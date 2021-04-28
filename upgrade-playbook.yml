@@ -49,10 +49,29 @@
       mpi_version: "{{ mpiinfo.stdout_lines[0] }}"
   - debug: msg="os_version {{ os_version }}\nqt_version {{ qt_version }}\nqwt_version {{ qwt_version }}\nmysql_version {{ mysql_version }}\nopenssl_version {{ openssl_version }}\nphp_version {{ php_version }}\nmpi_version {{ mpi_version }}"
 
-  - name: "check git repos"
-    shell: 'for j in {{ ultrascan_path }} /srv ~us3; { for i in `find $j -name "*.git" | sed s/.git$//`; { (printf "%-70s" "$i" && cd $i && RDATE=`git log -1 --shortstat .|grep Date:|sed -e "s/Date:   //"` && SHASH=`git log -1 --oneline .| cut -d" " -f1` && RNUMB=`git log --oneline | sed -n "/$SHASH/,99999p" | wc -l` && LCHNG=`git status -s | grep "^ M" | wc -l` && printf "%-30s  revision: %-6d tracked files with changes: %d\n" "$RDATE" $RNUMB $LCHNG ) }; }'
-    register: gitversions
-  - debug: var=gitversions.stdout_lines
+  - name: "check disk space"
+    shell: df -h
+    register: dfinfo
+  - debug: var=dfinfo.stdout_lines
+
+  - name: create temporary directory for dbutils clone
+    ansible.builtin.tempfile:
+      state: directory
+      suffix: build
+    register: dbutils_tmp_dir
+
+  - name: clone us3lims_dbutils into temp dir
+    ansible.builtin.git:
+      repo: https://github.com/ehb54/us3lims_dbutils
+      version: "main"
+      dest: "{{ dbutils_tmp_dir.path }}"
+      depth: 1
+
+  - name: run us3lims_git_info.php
+    shell: 'cd {{ dbutils_tmp_dir.path }} && php uslims_git_info.php --quiet'
+    register: gitinfo
+  - debug: var=gitinfo.stdout_lines
+
 
   - name: "check rtunnel"
     shell: 'RTBIN=`ls -l /sbin/rtunnel`; RTRCL=`grep rtunnel /etc/rc.local | egrep -v "^\s*#"`; printf "rtunnel:\n%s\nrc.local:\n%s\n" "$RTBIN" "$RTRCL"'
@@ -68,14 +87,82 @@
       name: install-rasmol
     when: rasmolinfo.stdout_lines[0] == "failed"
 
-  roles:
-    - upgrade-environment-modules
+  - include_role:
+      name: upgrade-environment-modules
+    when: upgrade_environment_modules|default(false)
+
+# replaced by uslims_git_info.php
+#  - name: Upgrade {{ repos[0][ 'name' ] }}
+#    block:
+#
+#     - name: check repo for {{ repos[0][ 'desc' ] }}
+#       shell: 'cd {{ repos[0]["path"] }} && git status -s | grep "^ M" | wc -l'
+#       register: repoinfo
+#     - debug: var=repoinfo
+#
+#     - name: Check for local changes
+#       fail:
+#         msg: repo has local changes '{{ repoinfo.stdout }}'
+#       when: repoinfo.stdout != '0'
+#
+#     - name: git pull {{ repos[0][ 'repo' ] }}
+#       git:
+#         repo: "{{ repos[0][ 'repo' ] }}"
+#         dest: "{{ repos[0][ 'path' ] }}"
+#         update: yes
+#
+#    when: upgrade_us3
+    
+  - name: Upgrade git branches
+    block:
+      - name: run us3lims_git_info.php --quiet --update-branch
+        shell: 'cd {{ dbutils_tmp_dir.path }} && php uslims_git_info.php --quiet --update-branch'
+        register: gitupgradebranch
+      - debug: var=gitupgradebranch.stdout_lines
+      - debug: var=gitupgradebranch.stderr_lines
+    when: upgrade_git_branch
+
+  - name: Upgrade git pull
+    block:
+      - name: run us3lims_git_info.php --quiet --update-pull {{ upgrade_git_pull_use }} {{ upgrade_git_pull_build }}
+        shell: 'cd {{ dbutils_tmp_dir.path }} && php uslims_git_info.php --quiet --update-pull {{ upgrade_git_pull_use }} {{ upgrade_git_pull_build }}'
+        register: gitupgradepull
+      - debug: var=gitupgradepull.stdout_lines
+      - debug: var=gitupgradepull.stderr_lines
+    when: upgrade_git_pull
+
+  - name: remove temporary directory  {{ dbutils_tmp_dir.path }}
+    file:
+      path: "{{ dbutils_tmp_dir.path }}"
+      state: absent
 
   vars:
-    ultrascan_path:    "/opt/ultrascan3"
-    us3_path:          "/home/us3"
-    us3_nodb_path:     "{{ us3_path }}/us3-nodb"
-    us3_cluster_path:  "{{ us3_path }}/cluster"
+## set these vars to enable upgrades
+    upgrade_environment_modules: false
+    upgrade_git_branch:          false
+    upgrade_git_pull:            false
+# pull use can be lims, util, mpi, gui or all
+    upgrade_git_pull_use:        "gui"
+# set to "" to not build
+    upgrade_git_pull_build:      "--update-pull-build"
+
+## paths
+    ultrascan_path:              "/opt/ultrascan3"
+    us3_path:                    "/home/us3"
+    us3_nodb_path:               "{{ us3_path }}/us3-nodb"
+    us3_cluster_path:            "{{ us3_path }}/cluster"
+
+## repos
+    repos: 
+      - desc: "us3_repo"
+        name: "us3"
+        path: "{{ ultrascan_path }}"
+        repo: "https://github.com/ehb54/ultrascan3.git"
+      - desc: "mpi_analysis_repo"
+        name: "us_mpi_analysis"
+        path: "{{ us3_nodb_path }}"
+        repo: "https://github.com/ehb54/ultrascan3.git"
+
 
 # further upgrade thoughts
 # us3
