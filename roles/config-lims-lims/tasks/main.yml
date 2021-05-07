@@ -46,11 +46,11 @@
     chdir: "{{ www_common }}/class_local"
     cmd: ./update_local.sh
 
-- name: Template topmenu.php
-  template: 
-      src: topmenu.php.j2
-      dest: "{{ www_common }}/topmenu.php"
-  changed_when: false
+#- name: Template topmenu.php
+#  template: 
+#      src: topmenu.php.j2
+#      dest: "{{ www_common }}/topmenu.php"
+#  changed_when: false
 
 # Web info dir.
 - name: clone webinfo repo

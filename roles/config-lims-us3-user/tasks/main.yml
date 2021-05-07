@@ -66,6 +66,12 @@
    version: "{{ branch }}"
    dest: "/home/us3/lims/database/sql"
 
+- name: git clone us3lims_dbutils repository
+  git:
+   repo: https://github.com/ehb54/us3lims_dbutils.git
+   version: "{{ branch }}"
+   dest: "/home/us3/lims/database/utils"
+
 - set_fact:
     gridctl_branch: "{{ branch }}"
   when: gridctl_branch is undefined
