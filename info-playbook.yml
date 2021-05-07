@@ -73,7 +73,7 @@
       depth: 1
 
   - name: run us3lims_git_info.php
-    shell: 'cd {{ dbutils_tmp_dir.path }} && php uslims_git_info.php --quiet'
+    shell: 'cd {{ dbutils_tmp_dir.path }} && php uslims_git_info.php --skip-unknown --quiet'
     register: gitinfo
   - debug: var=gitinfo.stdout_lines
 
