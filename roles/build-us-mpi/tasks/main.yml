@@ -96,7 +96,7 @@
     - name: make us_mpi_analysis for RedHat using gcc-9
       shell:
         chdir: "{{ us3_nodb_path }}"
-        cmd: /opt/rh/gcc-toolset-9/enable && gcc -v 2> build.gccversion && ./make-uma {{ item }} >> build.stdout 2>> build.stderr
+        cmd: . /opt/rh/gcc-toolset-9/enable && gcc -v 2> build.gccversion && ./make-uma {{ item }} >> build.stdout 2>> build.stderr
       with_items:
         - update
         - build
