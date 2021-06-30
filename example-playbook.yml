@@ -57,7 +57,11 @@
       - install-google-fonts
       - install-msttcore-fonts
       - install-reverse-tunnel
-
+      - renice-mariadb
+      - renice-slurmd
+      - restart-php-fpm
+      - install-demo-dbinst
+      
   become: yes
   vars:
         - install_workstation: false
@@ -90,10 +94,11 @@
         - qwt_version: "6.1.5"
         - cores_for_parallel_compile: 4
         - us3_branch: "master"
-        - gridctl_branch: "ehb-dev"
-        - common_branch: "ehb-dev"
-        - newinst_branch: "ehb-dev"
-        - webinfo_branch: "ehb-dev"
+        - gridctl_branch: "master"
+        - common_branch: "master"
+        - newinst_branch: "master"
+        - webinfo_branch: "master"
+        - utils_branch: "main"
 
         - postfix_relay_smtp_host: smtp.gmail.com
         - postfix_relay_smtp_port: 587
@@ -127,8 +132,8 @@
         - certbot_auto_renew_minute: "30" 
         - cerbot_auto_renew_options: "--quiet --no-self-upgrade"
 
-        - slurm_ver: 20.02.3 # Change to appropriate version 
-        - slurm_md5: c71a300d6c5d33ef8ca60e52a203bb1e
+        - slurm_ver: 20.02.7 # Change to appropriate version 
+        - slurm_md5: e47e68692354f03db2999ec84fe3f735
 
         # N.B. slurm_cores can not exceed available cores, if it does, the node will be stuck "draining" (waiting for available resources)
         #      if you want to develop (not production!) on a smaller system

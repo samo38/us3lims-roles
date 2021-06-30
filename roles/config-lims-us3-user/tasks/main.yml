@@ -69,8 +69,16 @@
 - name: git clone us3lims_dbutils repository
   git:
    repo: https://github.com/ehb54/us3lims_dbutils.git
-   version: "{{ branch }}"
+   version: "{{ utils_branch }}"
    dest: "/home/us3/lims/database/utils"
+
+- name: Change ownership of us3lims_dbutils
+  ansible.builtin.file:
+    path: "/home/us3/lims/database/utils"
+    state: directory
+    recurse: yes
+    owner: us3
+    group: us3
 
 - set_fact:
     gridctl_branch: "{{ branch }}"
