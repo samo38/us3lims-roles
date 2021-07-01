@@ -61,6 +61,7 @@
       - renice-slurmd
       - restart-php-fpm
       - install-demo-dbinst
+      - config-lims-backup
       
   become: yes
   vars:
