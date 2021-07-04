@@ -72,9 +72,10 @@
 - name: update passwords
   ansible.builtin.shell:
     chdir: /home/us3/lims/database/utils
-    cmd: "php uslims_people.php --update --db uslims3_Demo
+    cmd: "php uslims_people.php --update --db uslims3_Demo"
 
 - name: run ~us3/lims/bin/set_cluster_authorizations.php uslims3_Demo updatepeople
   ansible.builtin.shell:
     chdir: /home/us3/lims/bin
-    cmd: php set_cluster_authorizations.php uslims3_Demo updatepeople
+    cmd: "php set_cluster_authorizations.php uslims3_Demo updatepeople"
+
