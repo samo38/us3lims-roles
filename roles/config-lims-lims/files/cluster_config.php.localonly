@@ -43,5 +43,17 @@ $cluster_configuration =
          "active" => false
          ,"type"   => "local"
      ]
+     ,"expanse-gamc" => [
+         "active" => false
+         ,"type"   => "local"
+     ]
+     ,"demeler9-local" => [
+         "active" => false
+         ,"type"   => "local"
+     ]
+     ,"demeler1-local" => [
+         "active" => false
+         ,"type"   => "local"
+     ]
     ]
     ;

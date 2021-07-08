@@ -8,7 +8,7 @@
       - gcc-toolset-9
       - mpich
       - mpich-devel
-  when: ansible_facts['os_family'] == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "Rocky"
 
 - name: Install environment-modules and mpich Debian
   yum:
@@ -48,7 +48,7 @@
     src: mpi-build-gcc-toolset-9.j2
     dest: /etc/modulefiles/ultrascan/mpi-build
     mode: '0644'
-  when: ansible_facts['os_family'] == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "Rocky"
 
 - name: Check if us-mpi already installed, using {{ us3_cluster_path }}/bin/us_mpi_analysis as a proxy
   stat: 
@@ -101,7 +101,7 @@
         - update
         - build
         - install
-      when: ansible_facts['os_family'] == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "Rocky"
 
     - name: make us_mpi_analysis for Debian
       shell:
