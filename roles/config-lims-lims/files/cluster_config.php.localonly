@@ -27,10 +27,6 @@ $cluster_configuration =
          "active" => false
          ,"type"   => "local"
      ]
-     ,"jetstream-local" => [
-         "active" => false
-         ,"type"   => "local"
-     ]
      ,"juwels" => [
          "active" => false
          ,"type"   => "local"
