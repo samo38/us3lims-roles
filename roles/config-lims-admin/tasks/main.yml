@@ -9,6 +9,7 @@
     - demeler
     - alexey
     - ehb
+    - saeed
 
 - name: Add authorized keys
   authorized_key:
@@ -19,6 +20,7 @@
     - alexey
     - demeler
     - ehb
+    - saeed
 
 - name: "Install emacs-nox via yum"
   yum:
