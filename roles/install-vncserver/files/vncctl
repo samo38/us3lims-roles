@@ -109,7 +109,7 @@ This can be caused by:
 1. another graphical session running under your user name 
    (possibly on the system console)
 2. a corrupt ~/.vnc/config file
-3. some other process using you expected screen
+3. some other process using the same display number
 
 If you can not resolve this,
 please contact your system administrator or UltraScan support.
