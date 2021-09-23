@@ -50,12 +50,11 @@
    force: yes
   changed_when: false
 
-
-# do we need this?
-- name: Run update_local.sh
-  command:
-    chdir: "{{ www_common }}/class_local"
-    cmd: ./update_local.sh
+## do we need this? - not any more
+#- name: Run update_local.sh
+#  command:
+#    chdir: "{{ www_common }}/class_local"
+#    cmd: ./update_local.sh
 
 #- name: Template topmenu.php
 #  template: 

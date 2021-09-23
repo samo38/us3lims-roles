@@ -91,8 +91,8 @@
       expire_logs_days        = 30
       #innodb_force_recovery   = 1
       innodb_file_per_table   = 1
-      max_connections         = 2500
-      max_user_connections    = 500
+      max_connections         = 25000
+      max_user_connections    = 25000
       thread_cache_size       = 505
       query_cache_type        = 1
       query_cache_size        = 32M

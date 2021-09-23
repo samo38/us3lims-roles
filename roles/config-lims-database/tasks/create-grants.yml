@@ -38,7 +38,7 @@
   mysql_user:
         name: '{{ gbl_db_user }}'
         host: "{{ item }}"
-        priv: "{{ gbl_db_name }}.*:SELECT,INSERT,UPDATE,DELETE/uslims3_*.*:SELECT,UPDATE"
+        priv: "{{ gbl_db_name }}.*:SELECT,INSERT,UPDATE,DELETE/uslims3_*.*:SELECT,UPDATE/uslims3_*.*:INSERT"
         append_privs: yes
         password: '{{ gbl_db_pass }}'
         login_unix_socket: /var/lib/mysql/mysql.sock
