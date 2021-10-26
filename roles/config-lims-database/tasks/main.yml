@@ -95,8 +95,22 @@
       max_user_connections    = 25000
       thread_cache_size       = 505
       query_cache_type        = 1
-      query_cache_size        = 32M
-
+      # audit plugin
+      # plugin_load_add = server_audit
+      # server_audit=FORCE_PLUS_PERMANENT
+      # server_audit_file_rotate_now=ON
+      # server_audit_file_rotate_size=1000000
+      # server_audit_file_rotations=5
+      # server_audit_output_type=syslog
+      # server_audit_file_path=/var/log/mariadb/auditlog
+      # server_audit_logging=on
+      ## Performance settings https://mariadb.com/kb/en/configuring-mariadb-for-optimal-performance
+      innodb_buffer_pool_size = 8G
+      innodb_log_file_size    = 1G
+      innodb_flush_method     = O_DIRECT
+      thread-handling         = pool-of-threads
+      query_cache_size        = 512M
+      query_cache_limit       = 384K
 
 - name: start & enable MariaDB
   service:
