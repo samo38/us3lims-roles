@@ -63,6 +63,7 @@
       - install-demo-dbinst
       - config-lims-backup
       - install-xrdp
+      - install-proxychains4
       
   become: yes
   vars:
