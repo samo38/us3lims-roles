@@ -64,6 +64,7 @@
       - config-lims-backup
       - install-xrdp
       - install-proxychains4
+      - install-fail2ban
       
   become: yes
   vars:

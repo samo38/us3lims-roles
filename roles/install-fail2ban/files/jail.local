@@ -1,0 +1,16 @@
+[DEFAULT] 
+ignoreip = 127.0.0.1/8 142.66.17.9 71.41.148.17
+bantime  = 21600
+findtime  = 1000
+maxretry = 3
+banaction = iptables-multiport
+backend = systemd
+mta = sendmail
+protocol = tcp
+destmail = emre.brookes@umt.edu
+sender = emre.brookes@umt.edu
+action = %(action_mwl)s
+
+[sshd] 
+enabled = true
+bantime  = -1
