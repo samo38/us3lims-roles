@@ -25,3 +25,10 @@
   with_items:
     - fail2ban
     
+- name: Restart fail2ban in case of a config change
+  service:
+    name : '{{ item }}'
+    enabled: yes
+    state: restarted
+  with_items:
+    - fail2ban
