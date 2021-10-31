@@ -1,0 +1,13 @@
+---
+# template playbook for applying a limited number of roles after updates
+- hosts:        konstanzhost
+  gather_facts: yes
+  remote_user:  usadmin
+  become:       yes
+  
+  pre_tasks:
+
+  roles:
+      - install-fail2ban
+
+  vars:
