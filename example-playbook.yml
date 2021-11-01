@@ -3,6 +3,11 @@
   remote_user: usadmin
 
   pre_tasks:
+# uncomment to get all ansible_facts for target host
+#      - name: Print all available facts
+#        ansible.builtin.debug:
+#          var: ansible_facts
+
       - name: set www_user for Debian
         set_fact:
           www_user: "www-data"
@@ -30,11 +35,16 @@
            cmd: subscription-manager repos --enable "codeready-builder-for-rhel-8-x86_64-rpms"
         when: ansible_facts['distribution'] == "RedHat"
 
+      - name: enable codeready for Oracle
+        command:
+           cmd: dnf config-manager --set-enabled ol8_codeready_builder
+        when: ansible_facts['distribution'] == "OracleLinux"
+
       - name: install EPEL repo for RedHat
         yum:
            name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
            state: present
-        when: ansible_facts['distribution'] == "RedHat"
+        when: ansible_facts['distribution'] == "RedHat" or ansible_os_family == "Rocky" or ansible_facts['distribution'] == "OracleLinux"
 
   roles:
       - config-lims-gui
