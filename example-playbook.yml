@@ -81,6 +81,16 @@
         - install_workstation: false
         - install_commercial: true
 
+        # set the desired compiler optimization
+        # for hardware installs
+        - comp_opt: "-march=native"
+        # perhaps for VM installs if qt core dumps
+        # - comp_opt: "-m64"
+        
+        # innodb_buffer_pool_size
+        - innodb_buffer_pool_size: "2G"
+        # - innodb_buffer_pool_size: "8G"
+
         # uncomment one of the below for default allowed submissions
         - submit_localonly: true
         # - submit_remoteonly : true

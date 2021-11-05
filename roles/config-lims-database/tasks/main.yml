@@ -105,7 +105,7 @@
       # server_audit_file_path=/var/log/mariadb/auditlog
       # server_audit_logging=on
       ## Performance settings https://mariadb.com/kb/en/configuring-mariadb-for-optimal-performance
-      innodb_buffer_pool_size = 8G
+      innodb_buffer_pool_size = {{ innodb_buffer_pool_size }}
       innodb_log_file_size    = 1G
       innodb_flush_method     = O_DIRECT
       thread-handling         = pool-of-threads
