@@ -75,6 +75,7 @@
       - install-xrdp
       - install-proxychains4
       - install-fail2ban
+      - config-lims-scigap
       
   become: yes
   vars:
