@@ -76,6 +76,7 @@
       - install-proxychains4
       - install-fail2ban
       - config-lims-scigap
+      - config-authentication-messages
       
   become: yes
   vars:
