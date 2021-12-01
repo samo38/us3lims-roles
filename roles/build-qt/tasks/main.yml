@@ -52,6 +52,7 @@
           - libxcb
           - fontconfig-devel
           - libxcb-devel
+          - libjpeg-devel
           - xcb-util
           - xcb-util-devel
           - mesa-libGL-devel
@@ -146,6 +147,12 @@
         path: /opt/qt-everywhere-src-{{ qt_version }}/shadow-build
         state: directory
         mode: '0755'
+
+    - name: file existence sanity checkes
+      shell:
+        cmd: ls {{ item }}
+      with_items:
+        - /lib64/libXext.so
 
     - name: Configure qt {{ qt_version }} for RedHat using gcc-9
       shell:
