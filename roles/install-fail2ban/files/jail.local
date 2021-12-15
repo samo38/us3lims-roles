@@ -7,10 +7,10 @@ banaction = iptables-multiport
 backend = systemd
 mta = sendmail
 protocol = tcp
-destemail = emre.brookes@umt.edu
-sender = emre.brookes@umt.edu
-senderName = Fail2ban
-action = %(action_mwl)s
+# destemail = emre.brookes@umt.edu
+# sender = emre.brookes@umt.edu
+# senderName = Fail2ban
+# action = %(action_mwl)s
 
 [sshd] 
 enabled = true
