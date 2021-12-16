@@ -44,5 +44,5 @@
   vars:
     - start_year : 2019
     - end_year   : 2021
-    - usage_dir  : "/home/usadmin/usage/{{ ansible_date_time.date }}-test"
+    - usage_dir  : "/home/usadmin/usage/{{ ansible_date_time.date }}"
     
