@@ -1,7 +1,7 @@
 ---
 # collect usage status
 # academic & commercial hosts with dbs
-- hosts: alcamihost allerganhost coriolishost catalenthost hexalepychost zentriforce1host zentriforce2host juelichhost konstanzhost latrobe demeler2host demeler4host demeler9
+- hosts: commercialhosts academichostswithdbs
 
   gather_facts: yes
   remote_user:  usadmin
@@ -44,5 +44,5 @@
   vars:
     - start_year : 2019
     - end_year   : 2021
-    - usage_dir  : "/home/usadmin/usage/{{ ansible_date_time.date }}"
+    - usage_dir  : "/home/usadmin/usage/{{ ansible_date_time.date }}-test"
     
