@@ -57,6 +57,7 @@
           - xcb-util-devel
           - mesa-libGL-devel
           - libxkbcommon-devel
+          - libxkbcommon-x11-devel
           - openssl-devel
           - postgresql-devel
           - subversion
@@ -225,4 +226,4 @@
         path: /opt/qt-everywhere-src-{{ qt_version }}/shadow-build
         state: absent
 
-  when: qt_installed_details.stat.exists == false
+  when: qt_installed_details.stat.exists == false or qt_force_rebuild is defined
