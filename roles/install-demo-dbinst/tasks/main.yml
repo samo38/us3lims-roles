@@ -64,6 +64,18 @@
     regexp: "SET_EMAIL"
     replace: "{{ admin_email }}"
 
+- name: replace SET_US3_BRANCH ~us3/lims/database/utils/db_config.php
+  ansible.builtin.replace:
+    path: /home/us3/lims/database/utils/db_config.php
+    regexp: "SET_US3_BRANCH"
+    replace: "{{ us3_branch }}"
+
+- name: replace SET_SQL_BRANCH ~us3/lims/database/utils/db_config.php
+  ansible.builtin.replace:
+    path: /home/us3/lims/database/utils/db_config.php
+    regexp: "SET_SQL_BRANCH"
+    replace: "{{ sql_branch }}"
+
 - name: import data
   ansible.builtin.shell:
     chdir: /home/us3/lims/database/utils/dbmigrate

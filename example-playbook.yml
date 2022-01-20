@@ -119,12 +119,15 @@
         - qt_major_version: "5.14"
         - qt_version: "5.14.2"
         - qwt_version: "6.1.5"
-        - cores_for_parallel_compile: 4
-        - us3_branch: "master"
+        - cores_for_parallel_compile: "{{ ansible_processor_vcpus }}"
+        - us3_branch: "release-2022-Q1"
+        - sql_branch: "release-2022-Q1"
+        - dbinst_branch: "master"
         - gridctl_branch: "master"
         - common_branch: "master"
         - newinst_branch: "master"
         - webinfo_branch: "master"
+        - airavata_branch: "master"
         - utils_branch: "main"
 
         - postfix_relay_smtp_host: smtp.gmail.com
@@ -178,7 +181,7 @@
         #      if you want to develop (not production!) on a smaller system
         #         add "#SBATCH -O" to your sbatch submission scripts to allow overcommitting
         #         set - slurm_sbatch_extras : "#SBATCH -O\n" for slurm testing scripts via ansible
-        - slurm_cores : 2
+        - slurm_cores : "{{ ansible_processor_vcpus }}"
         - slurm_sbatch_extras : ""
         # - slurm_sbatch_extras : "#SBATCH -O\n"
 
