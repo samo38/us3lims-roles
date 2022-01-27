@@ -24,14 +24,14 @@
           become: no
           shell: echo '{{ pw }}' > {{ tmp_pass_file }} && chmod 600 {{ tmp_pass_file }}
     
-        - name: fetch listen-config.php {{ config_dir }}
+        - name: fetch config files {{ config_dir }}
           fetch:
             src: '{{ item }}'
             dest: "{{ config_dir }}/"
             flat: yes
           with_items: '{{ config_files_full_path }}'
 
-        - name: fetch listen-config.php {{ config_dir }}
+        - name: set permissions of downloaded files {{ config_dir }}
           delegate_to: localhost
           ansible.builtin.file :
             dest: "{{ config_dir }}"
