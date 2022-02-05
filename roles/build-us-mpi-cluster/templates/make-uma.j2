@@ -6,9 +6,10 @@ UTILDIR=$US3BASE/utils
 PROGDIR=$US3BASE/programs/us_mpi_analysis
 ULIBDIR={{ us3_cluster_path }}/lib/
 UBINDIR={{ us3_cluster_path }}/bin/
+OPT={{ target_dir }}
 
-QTDIR=/opt/qt-{{ qt_version }}
-QWTDIR=/opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+QTDIR=$OPT/qt-{{ qt_version }}
+QWTDIR=$OPT/qt-{{ qt_version }}-qwt-{{ qwt_version }}
 QMAKESPEC=linux-g++-64
 
 PROG=us_mpi_analysis

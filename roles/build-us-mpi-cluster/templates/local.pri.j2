@@ -17,7 +17,7 @@ unix {
   QMAKE_CFLAGS_RELEASE   += -Wno-unused-local-typedefs
   QMAKE_CXXFLAGS         += -Wno-unused-local-typedefs
 
-  QWTPATH     = /opt/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+  QWTPATH     = {{ target_dir }}/qt-{{ qt_version }}-qwt-{{ qwt_version }}
   QWTLIB      = -L../../lib -L../lib -L$$QWTPATH/lib -lqwtplot3d -lqwt -lGLU
   MYSQLDIR    = /usr/lib/mysql
   MYSQLPATH   = /usr/include/mysql
@@ -29,12 +29,13 @@ unix {
   # libmysqlclient and libqca, define the following 
 
   DEFINES     += NO_DB
-  QMAKE_CC    = {{ gcc_path }}/gcc
-  QMAKE_CXX   = {{ gcc_path }}/g++
-  MPIPATH     = /usr/lib64/mpich
-  MPILIBS     = -L$${MPIPATH}/lib -lmpi
-  INCLUDEPATH += /usr/include/mpich-x86_64
-  QMAKESPEC   = linux-g++
+  QMAKE_CC    = {{ qmake_cc }}
+  QMAKE_CXX   = {{ qmake_cxx }}
+  QMAKE_LINK  = {{ qmake_link }}
+  MPIPATH     = {{ mpi_path }}
+  MPILIBS     = {{ mpi_libs }}
+  INCLUDEPATH += {{ include_path }}
+  QMAKESPEC   = {{ platform }}
 }
 
 win32 {

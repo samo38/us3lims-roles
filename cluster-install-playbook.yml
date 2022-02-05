@@ -1,20 +1,31 @@
 ---
 # playbook for installing a new cluster
-- hosts: ls6host
+- hosts: localhost
+  connection: local
+  
   gather_facts: yes
   
   pre_tasks:
 
   roles:
-      - build-qt-cluster
-#      - build-qwt-cluster
-#      - build-us-mpi-cluster
+#      - build-qt-cluster
+##      - build-qwt-cluster
+      - build-us-mpi-cluster
      
   vars:
       - target_dir : /work/00451/tg457210/ls6
-      - compiler:  "icc"
+      - extra_configs : "-no-gui"
+      - compiler       : "icc"
+      - qmake_cc       : "mpicc"
+      - qmake_cxx      : "mpicxx"
+      - qmake_link     : "mpicxx"
+      - mpi_path       : ""
+      - mpi_libs       : "-lmpi"
+      - include_path   : ""
+      
       - platform: "linux-icc-64"
-      - comp_opt: "-march=native"
+      - comp_opt: "-march=native -O3"
+#      - comp_opt: ""
       - cores_for_parallel_compile: 2
       - qt_major_version: "5.14"
       - qt_version: "5.14.2"
