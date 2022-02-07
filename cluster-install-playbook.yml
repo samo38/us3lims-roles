@@ -9,26 +9,36 @@
 
   roles:
 #      - build-qt-cluster
-##      - build-qwt-cluster
       - build-us-mpi-cluster
      
   vars:
-      - target_dir : /work/00451/tg457210/ls6
-      - extra_configs : "-no-gui"
-      - compiler       : "icc"
-      - qmake_cc       : "mpicc"
-      - qmake_cxx      : "mpicxx"
-      - qmake_link     : "mpicxx"
-      - mpi_path       : ""
-      - mpi_libs       : "-lmpi"
-      - include_path   : ""
+      - qt_force_rebuild           : true
+      - rebuild_us_mpi             : true
+      - target_dir                 : /work/00451/tg457210/ls6
+      - extra_configs              : "-no-gui -no-pch"
+      - compiler                   : "icc"
+      - qmake_cc                   : "mpicc"
+      - qmake_cxx                  : "mpicxx"
+      - qmake_link                 : "mpicxx"
+      - mpi_path                   : ""
+      - mpi_libs                   : "-lmpi"
+      - include_path               : ""
+      - cores_performance          : 16
       
-      - platform: "linux-icc-64"
-      - comp_opt: "-march=native -O3"
-#      - comp_opt: ""
-      - cores_for_parallel_compile: 2
-      - qt_major_version: "5.14"
-      - qt_version: "5.14.2"
-      - qwt_version: "6.1.5"
-      - us3_branch: "master"
+#      - module_loads               : "module load gcc/11.2.0"
+#      - modules_loads              : "module load gcc/9.4.0"
+      - modules_loads              : ""
+      - platform                   : "linux-icc-64"
+      - comp_opt                   : "-O3"
+      - cores_for_parallel_compile : 3
+      - qt_major_version           : "5.14"
+      - qt_version                 : "5.14.2"
+      - qwt_version                : "6.1.5"
+      - us3_branch                 : "master"
+      - slurm_cores                : 128
+      - slurm_sbatch_extras        : ""
 
+      - module_loads               : ""
+      - mpirun                     : "ibrun"
+      - queue                      : "development"
+      
