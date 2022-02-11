@@ -21,6 +21,7 @@
       with_items:
         - utils
         - programs/us_mpi_analysis
+      ignore_errors : true      
       when: rebuild_us_mpi == true
       
     - name: Create {{ us3_cluster_path }} directories
@@ -33,7 +34,7 @@
         - bin
         - lib
 
-    - name: Copy over template files for building us-mpi
+    - name: Copy over template files for building us-mpi to {{ us3_nodb_path }}
       template: 
         src: "{{ item.name }}.j2"
         dest: "{{ us3_nodb_path }}/{{ item.name }}"

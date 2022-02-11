@@ -1,7 +1,8 @@
 ---
 # playbook for installing a new cluster
-- hosts: localhost
-  connection: local
+- hosts: demeler1host
+# uncomment if running on localhost
+#  connection: local
   
   gather_facts: yes
   
@@ -14,22 +15,21 @@
   vars:
       - qt_force_rebuild           : true
       - rebuild_us_mpi             : true
-      - target_dir                 : /work/00451/tg457210/ls6
+      - target_dir                 : /home/usadmin/perftest
+      - qt_dir                     : /opt
       - extra_configs              : "-no-gui -no-pch"
       - compiler                   : "icc"
-      - qmake_cc                   : "mpicc"
-      - qmake_cxx                  : "mpicxx"
-      - qmake_link                 : "mpicxx"
-      - mpi_path                   : ""
-      - mpi_libs                   : "-lmpi"
-      - include_path               : ""
+      - qmake_cc                   : "icc"
+      - qmake_cxx                  : "icpc"
+      - qmake_link                 : "icpc"
+      - mpi_path                   : "/usr/lib64/mpich"
+      - mpi_libs                   : "-L{{ mpi_path }}/lib -lmpi"
+      - include_path               : "/usr/include/mpich-x86_64"
       - cores_performance          : 16
       
-#      - module_loads               : "module load gcc/11.2.0"
-#      - modules_loads              : "module load gcc/9.4.0"
-      - modules_loads              : ""
+      - module_loads              : "module purge; module load ultrascan/mpi-build; . /opt/intel/oneapi/setvars.sh; module load mpi"
       - platform                   : "linux-icc-64"
-      - comp_opt                   : "-O3"
+      - comp_opt                   : "-O3 -march=native"
       - cores_for_parallel_compile : 3
       - qt_major_version           : "5.14"
       - qt_version                 : "5.14.2"
@@ -38,7 +38,6 @@
       - slurm_cores                : 128
       - slurm_sbatch_extras        : ""
 
-      - module_loads               : ""
-      - mpirun                     : "ibrun"
-      - queue                      : "development"
+      - mpirun                     : "mpirun"
+      - queue                      : "batch"
       

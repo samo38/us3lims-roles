@@ -4,7 +4,7 @@
 
 set -e
 
-. /etc/profile
+# . /etc/profile
 
 cd {{ mpi_test_path }}/performance
 
@@ -27,7 +27,7 @@ cat > test.slurm <<EOF
 {{ slurm_sbatch_extras }}
 
 {{ module_loads }}
-LD_LIBRARY_PATH={{ us3_cluster_path}}/lib:$LD_LIBRARY_PATH 
+LD_LIBRARY_PATH={{ us3_cluster_path}}/lib:\$LD_LIBRARY_PATH 
 
 # export UCX_LOG_LEVEL=error
 # export OMPI_MCA_btl=self,sm,tcp

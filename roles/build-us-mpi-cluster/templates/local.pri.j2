@@ -15,7 +15,7 @@ unix {
   QMAKE_CFLAGS_RELEASE   += -Wno-unused-local-typedefs
   QMAKE_CXXFLAGS         += -Wno-unused-local-typedefs
 
-  QWTPATH     = {{ target_dir }}/qt-{{ qt_version }}-qwt-{{ qwt_version }}
+  QWTPATH     = {{ qt_dir }}/qt-{{ qt_version }}-qwt-{{ qwt_version }}
   QWTLIB      = -L../../lib -L../lib -L$$QWTPATH/lib -lqwtplot3d -lqwt -lGLU
   MYSQLDIR    = /usr/lib/mysql
   MYSQLPATH   = /usr/include/mysql

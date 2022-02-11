@@ -139,14 +139,14 @@
         ### required if install-reverse-tunnel role run
         ### you will manually need to install usadmin's public key on the rtunnel_user @ rtunnel_ip's authorized keys
         ##- rtunnel_user: "ultrascan"
-        ##- rtunnel_ip: "142.66.17.9"
+        ##- rtunnel_ip: "secure.aucsolutions.com"
         ### assign unique port
         ##- rtunnel_port: "220XX"
 
         # required for role install-reverse-tunnel-service
         # you will manually need to install usadmin's public key on the rtunnel_user @ rtunnel_ip's authorized keys
         - rtunnel_user: "ultrascan"
-        - rtunnel_ip: "142.66.17.9"
+        - rtunnel_ip: "secure.aucsolutions.com"
         # assign unique port (if both rtunnel & rtunnel service installed, use different ports!
         - rtunnel_service_port: "220XX"
         ## enabled at boot up - "no" or "yes"
