@@ -17,6 +17,12 @@
       - mpich
   when: ansible_facts['os_family'] == "Debian"
   
+- name: set mpich as default mpi module
+  ansible.builtin.copy:
+    src: mpidotversion
+    dest: /usr/share/modulefiles/mpi/.version
+    mode: '0644'
+
 - name: Link /etc/modulefiles to /usr/share/modules/modulefiles for Debian
   file: 
     src: /usr/share/modules/modulefiles

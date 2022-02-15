@@ -90,6 +90,15 @@
    version: "{{ gridctl_branch }}"
    dest: "/home/us3/lims/bin"
 
+- name: copy cluster_config.php.template to cluser_config.php
+  ansible.builtin.copy:
+   remote_src: yes
+   src: /home/us3/lims/bin/cluster_config.php.template
+   dest: /home/us3/lims/bin/cluster_config.php
+   owner: us3
+   group: us3
+   mode: 0644
+
 - name: Change permissions in gridctl
   file:
       path: /home/us3/lims/bin
