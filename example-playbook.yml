@@ -120,15 +120,15 @@
         - qt_version: "5.14.2"
         - qwt_version: "6.1.5"
         - cores_for_parallel_compile: "{{ ansible_processor_vcpus }}"
-        - us3_branch: "release-2022-Q1"
-        - sql_branch: "release-2022-Q1"
-        - dbinst_branch: "master"
-        - gridctl_branch: "master"
-        - common_branch: "master"
-        - newinst_branch: "master"
-        - webinfo_branch: "master"
+        - us3_branch:      "release-2022-Q2"
+        - sql_branch:      "release-2022-Q2"
+        - dbinst_branch:   "release-2022-Q2"
+        - gridctl_branch:  "release-2022-Q2"
+        - common_branch:   "release-2022-Q2"
+        - newinst_branch:  "release-2022-Q2"
+        - webinfo_branch:  "release-2022-Q2"
         - airavata_branch: "master"
-        - utils_branch: "main"
+        - utils_branch:    "main"
 
         - postfix_relay_smtp_host: smtp.gmail.com
         - postfix_relay_smtp_port: 587
@@ -174,8 +174,8 @@
         - certbot_auto_renew_minute: "30" 
         - cerbot_auto_renew_options: "--quiet --no-self-upgrade"
 
-        - slurm_ver: 20.02.7 # Change to appropriate version 
-        - slurm_md5: e47e68692354f03db2999ec84fe3f735
+        - slurm_ver: 20.11.9 # Change to appropriate version
+        - slurm_md5: 79b39943768ef21b83585e2f5087d9af
 
         # N.B. slurm_cores can not exceed available cores, if it does, the node will be stuck "draining" (waiting for available resources)
         #      if you want to develop (not production!) on a smaller system
