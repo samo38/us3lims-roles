@@ -101,34 +101,34 @@
 
         # Required variables to define:
         # N.B. once you set these, you can't change them simply by rerunning ansible-playbook for the same remote host!
-        - us3_db_pass: "foobar-demo"
-        - root_db_pass: "foobar-super"
-        - admins_db_pass: "foobar-admin"
-        - gbl_db_pass: "foobar-global"
-        - us3php_db_pass: "foobar-php"
+        - us3_db_pass:       "foobar-demo"
+        - root_db_pass:      "foobar-super"
+        - admins_db_pass:    "foobar-admin"
+        - gbl_db_pass:       "foobar-global"
+        - us3php_db_pass:    "foobar-php"
         - limsadmin_db_pass: "foobar-iam-admin" 
 
-        - admin_email: "example@email.org"
-        - cron_admin: "example@email.org" # root@localhost 
+        - admin_email:       "example@email.org"
+        - cron_admin:        "example@email.org" # root@localhost 
         
-        - ipaddr_ext: "192.168.5.30"
-        - ipaddr_int: "192.168.5.30"
+        - ipaddr_ext:        "192.168.5.30"
+        - ipaddr_int:        "192.168.5.30"
         
         - self_signed: 'yes' # change to 'no' to use certbot 
 
-        - qt_major_version: "5.14"
-        - qt_version: "5.14.2"
-        - qwt_version: "6.1.5"
+        - qt_major_version:  "5.15"
+        - qt_version:        "5.15.6"
+        - qwt_version:       "6.1.6"
         - cores_for_parallel_compile: "{{ ansible_processor_vcpus }}"
-        - us3_branch:      "release-2022-Q2"
-        - sql_branch:      "release-2022-Q2"
-        - dbinst_branch:   "release-2022-Q2"
-        - gridctl_branch:  "release-2022-Q2"
-        - common_branch:   "release-2022-Q2"
-        - newinst_branch:  "release-2022-Q2"
-        - webinfo_branch:  "release-2022-Q2"
-        - airavata_branch: "master"
-        - utils_branch:    "main"
+        - us3_branch:        "release-2022-Q2"
+        - sql_branch:        "release-2022-Q2"
+        - dbinst_branch:     "release-2022-Q2"
+        - gridctl_branch:    "release-2022-Q2"
+        - common_branch:     "release-2022-Q2"
+        - newinst_branch:    "release-2022-Q2"
+        - webinfo_branch:    "release-2022-Q2"
+        - airavata_branch:   "master"
+        - utils_branch:      "main"
 
         - postfix_relay_smtp_host: smtp.gmail.com
         - postfix_relay_smtp_port: 587

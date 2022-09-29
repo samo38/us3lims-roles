@@ -16,6 +16,16 @@
     cron_file: /etc/crontab
     user: root
 
+# - deprecated
+#- name: Set gridctl_pro cronjob
+#  cron:
+#    name: gridctl_pro cronjob
+#    minute: "*/1"
+#    job: /usr/bin/cronic php /home/us3/lims/bin/gridctl_pro.php
+#    user: us3
+#    cron_file: /etc/crontab
+#  when: cron_enable_pro == 'yes'
+
 - name: set cluster_status cronjob
   cron:
     name: cluster_status cronjob
